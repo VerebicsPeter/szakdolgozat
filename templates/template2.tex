@@ -1,0 +1,66 @@
+\section{Forráskódok}
+
+Nulla sodales purus id mi consequat, eu venenatis odio pharetra. Cras a arcu quam. Suspendisse augue risus, pulvinar a turpis et, commodo aliquet turpis. Nulla aliquam scelerisque mi eget pharetra. Mauris sed posuere elit, ac lobortis metus. Proin lacinia sit amet diam sed auctor. Nam viverra orci id sapien sollicitudin, a aliquam lacus suscipit. Quisque ac tincidunt leo \ref{src:cpp}. és \ref{src:csharp}.~forráskód:
+
+\lstset{caption={Hello World in C++}, label=src:cpp}
+\begin{lstlisting}[language={C++}]
+#include <stdio>
+
+int main() 
+{
+	int c;
+	std::cout << "Hello World!" << std::endl;
+
+	std::cout << "Press any key to exit." << std::endl;
+	std::cin >> c;
+	
+	return 0;
+}
+\end{lstlisting}
+
+\lstset{caption={Hello World in C\#}, label=src:csharp}
+\begin{lstlisting}[language={[Sharp]C}]
+using System;
+namespace HelloWorld
+{
+	class Hello 
+	{
+		static void Main() 
+		{
+			Console.WriteLine("Hello World!");
+			
+			Console.WriteLine("Press any key to exit.");
+			Console.ReadKey();
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{Algoritmusok}
+
+Az \ref{alg:ibb}.~algoritmus egy általános elágazás és korlátozás algoritmust (\emph{Branch and Bound algorithm}) mutat be. A \ref{step:selrule}.~lépésben egy megfelelő kiválasztási szabályt kell alkalmazni.
+Példa forrása: \href{https://www.inf.u-szeged.hu/actacybernetica/}{Acta Cybernetica (ez egy hiperlink)}.
+
+\begin{algorithm}[H]
+\caption{A general interval B\&B algorithm}
+\label{alg:ibb}
+\textbf{\underline{Funct}} IBB($S,f$)
+\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
+\State Set the working list ${\cal L}_W$ := $\{S\}$ and the final list ${\cal L}_Q$ := $\{\}$
+\While{( ${\cal L}_W \neq \emptyset$ )} \label{alg:igoend}
+	\State Select an interval $X$ from ${\cal L}_W$ \label{step:selrule}\Comment{Selection rule}
+	\State Compute $lbf(X)$ \Comment{Bounding rule}
+	\If{$X$ cannot be eliminated} \Comment{Elimination rule}
+		\State Divide $X$ into $X^j,\ j=1,\dots, p$, subintervals   \Comment{Division rule}
+		\For{$j=1,\ldots,p$}
+			\If{$X^j$ satisfies the termination criterion} \Comment{Termination rule}
+				\State Store $X^j$ in ${\cal L}_W$
+			\Else
+				\State Store $X^j$ in ${\cal L}_W$
+			\EndIf
+		\EndFor
+	\EndIf
+\EndWhile
+\State \textbf{return} ${\cal L}_Q$
+\end{algorithmic}
+\end{algorithm}

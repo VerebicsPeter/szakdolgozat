@@ -1,0 +1,532 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Creator: graphviz version 2.43.0 (0)
+%%Title: source.app.appstate.AppState
+%%Pages: 1
+%%BoundingBox: 36 36 739 763
+%%EndComments
+save
+%%BeginProlog
+/DotDict 200 dict def
+DotDict begin
+
+/setupLatin1 {
+mark
+/EncodingVector 256 array def
+ EncodingVector 0
+
+ISOLatin1Encoding 0 255 getinterval putinterval
+EncodingVector 45 /hyphen put
+
+% Set up ISO Latin 1 character encoding
+/starnetISO {
+        dup dup findfont dup length dict begin
+        { 1 index /FID ne { def }{ pop pop } ifelse
+        } forall
+        /Encoding EncodingVector def
+        currentdict end definefont
+} def
+/Times-Roman starnetISO def
+/Times-Italic starnetISO def
+/Times-Bold starnetISO def
+/Times-BoldItalic starnetISO def
+/Helvetica starnetISO def
+/Helvetica-Oblique starnetISO def
+/Helvetica-Bold starnetISO def
+/Helvetica-BoldOblique starnetISO def
+/Courier starnetISO def
+/Courier-Oblique starnetISO def
+/Courier-Bold starnetISO def
+/Courier-BoldOblique starnetISO def
+cleartomark
+} bind def
+
+%%BeginResource: procset graphviz 0 0
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+       dup 1 exch div /InvScaleFactor exch def
+       scale
+} bind def
+
+% styles
+/solid { [] 0 setdash } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+/tapered { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw text fitted to its expected width
+/alignedtext {			% width text
+	/text exch def
+	/width exch def
+	gsave
+		width 0 gt {
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
+		} if
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+/showpage { } def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/layerlen layercolorseq length def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer 1 sub layerlen mod get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+14 default-font-family set_font
+% /arrowlength 10 def
+% /arrowwidth 5 def
+
+% make sure pdfmark is harmless for PS-interpreters other than Distiller
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+% make '<<' and '>>' safe on PS Level 1 devices
+/languagelevel where {pop languagelevel}{1} ifelse
+2 lt {
+    userdict (<<) cvn ([) cvn load put
+    userdict (>>) cvn ([) cvn load put
+} if
+
+%%EndSetup
+setupLatin1
+%%Page: 1 1
+%%PageBoundingBox: 36 36 739 763
+%%PageOrientation: Portrait
+0 0 1 beginpage
+gsave
+36 36 703 727 boxprim clip newpath
+1 1 set_scale 0 rotate 40 40 translate
+% source.app.appbases.Observable
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 0 634.5 moveto
+0 718.5 lineto
+318 718.5 lineto
+318 634.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+41.5 703.3 moveto 235 (source.app.appbases.Observable) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 0 695.5 moveto
+318 695.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+38.5 680.3 moveto 241 (observers : dict[str, list[Callable]]) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 0 672.5 moveto
+318 672.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 657.3 moveto 295 (attach\(event_type: str, callback: Callable\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+8 642.3 moveto 302 (notify\(event_type: str, data: object | None\)) alignedtext
+grestore
+% source.app.appstate.AppRules
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 39.5 136.5 moveto
+39.5 295.5 lineto
+272.5 295.5 lineto
+272.5 136.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+47.5 280.3 moveto 217 (source.app.appstate.AppRules) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 39.5 272.5 moveto
+272.5 272.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+55 257.3 moveto 92 (format : bool) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+55 242.3 moveto 98 (rename : bool) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+55 227.3 moveto 202 (rules : list[tfm.Transformer]) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 39.5 219.5 moveto
+272.5 219.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+62.5 204.3 moveto 187 (add_rule\(name: str\): None) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+62.5 189.3 moveto 89 (clear_rules\(\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+62.5 174.3 moveto 133 (get_rule_info\(\): str) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+62.5 159.3 moveto 185 (get_rule_names\(\): list[str]) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+62.5 144.3 moveto 187 (pop_rule\(index: int\): None) alignedtext
+grestore
+% source.app.appstate.AppRules->source.app.appbases.Observable
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 156.514 295.5583 moveto
+157.1286 389.4805 158.1395 543.9846 158.6627 623.953 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 155.1647 624.2844 moveto
+158.7302 634.2613 lineto
+162.1646 624.2386 lineto
+closepath stroke
+grestore
+% source.app.appstate.AppState
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 175 347.5 moveto
+175 596.5 lineto
+695 596.5 lineto
+695 347.5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+327 581.3 moveto 216 (source.app.appstate.AppState) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 175 573.5 moveto
+695 573.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 558.3 moveto 70 (app_rules) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 543.3 moveto 71 (ast_result) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 528.3 moveto 76 (ast_source) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 513.3 moveto 287 (last_change : model.CodeChange | None) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 498.3 moveto 103 (str_result : str) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+291.5 483.3 moveto 109 (str_source : str) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 175 475.5 moveto
+695 475.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 460.3 moveto 156 (ast_parse\(source: str\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 445.3 moveto 111 (ast_transform\(\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 430.3 moveto 262 (ast_transform_preview\(\): dict | None) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 415.3 moveto 504 (make_change\(source: str, result: str, change: dict\): model.CodeChange) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 400.3 moveto 140 (save_change\(\): bool) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 385.3 moveto 153 (set_result\(result: str\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 370.3 moveto 163 (set_source\(source: str\)) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+183 355.3 moveto 217 (treeview_data\(target: str\): list) alignedtext
+grestore
+% source.app.appstate.AppRules->source.app.appstate.AppState
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 242.3667 295.6277 moveto
+257.6253 309.5191 273.881 324.3182 290.2334 339.2053 curveto
+stroke
+0 0 0 edgecolor
+newpath 290.4487 339.4013 moveto
+297.5783 340.4827 lineto
+299.3223 347.4798 lineto
+292.1927 346.3984 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 290.4487 339.4013 moveto
+297.5783 340.4827 lineto
+299.3223 347.4798 lineto
+292.1927 346.3984 lineto
+closepath stroke
+0.33333 1 1 edgecolor
+14 /Times-Roman set_font
+279 317.8 moveto 70 (app_rules) alignedtext
+grestore
+% source.app.appstate.AppState->source.app.appbases.Observable
+gsave
+1 setlinewidth
+0 0 0 edgecolor
+newpath 266.4991 596.6284 moveto
+251.2565 607.8118 236.5365 618.6118 223.1343 628.4449 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 220.9592 625.6997 moveto
+214.967 634.4373 lineto
+225.1001 631.3436 lineto
+closepath stroke
+grestore
+% source.model.typedefs.Code
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 326 .5 moveto
+326 84.5 lineto
+544 84.5 lineto
+544 .5 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+334 69.3 moveto 202 (source.model.typedefs.Code) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 326 61.5 moveto
+544 61.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+392.5 46.3 moveto 85 (hashed : str) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+392.5 31.3 moveto 82 (source : str) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 326 23.5 moveto
+544 23.5 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+432.5 8.3 moveto 5 ( ) alignedtext
+grestore
+% source.model.typedefs.CodeChange
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 299 159 moveto
+299 273 lineto
+571 273 lineto
+571 159 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+307 257.8 moveto 256 (source.model.typedefs.CodeChange) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 299 250 moveto
+571 250 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+355 234.8 moveto 160 (change : dict[str, bool]) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+355 219.8 moveto 34 (code) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+355 204.8 moveto 88 (method : str) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+355 189.8 moveto 76 (result : str) alignedtext
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 299 182 moveto
+571 182 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+432.5 166.8 moveto 5 ( ) alignedtext
+grestore
+% source.model.typedefs.Code->source.model.typedefs.CodeChange
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 435 84.5785 moveto
+435 103.1341 435 125.5616 435 146.547 curveto
+stroke
+0 0 0 edgecolor
+newpath 435.0001 146.6961 moveto
+439 152.6961 lineto
+435 158.6961 lineto
+431 152.696 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 435.0001 146.6961 moveto
+439 152.6961 lineto
+435 158.6961 lineto
+431 152.696 lineto
+closepath stroke
+0.33333 1 1 edgecolor
+14 /Times-Roman set_font
+435 106.8 moveto 34 (code) alignedtext
+grestore
+% source.model.typedefs.CodeChange->source.app.appstate.AppState
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 435 273.0558 moveto
+435 291.6691 435 313.276 435 335.234 curveto
+stroke
+0 0 0 edgecolor
+newpath 435.0001 335.4522 moveto
+439 341.4522 lineto
+435 347.4522 lineto
+431 341.4521 lineto
+closepath fill
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 435.0001 335.4522 moveto
+439 341.4522 lineto
+435 347.4522 lineto
+431 341.4521 lineto
+closepath stroke
+0.33333 1 1 edgecolor
+14 /Times-Roman set_font
+435 317.8 moveto 85 (last_change) alignedtext
+grestore
+endpage
+showpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+end
+restore
+%%EOF

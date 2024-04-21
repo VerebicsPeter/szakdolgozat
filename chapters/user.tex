@@ -1,47 +1,51 @@
 \chapter{Felhasználói dokumentáció}
 \label{ch:user}
 
-A szoftvernek két felhasználói felülete van: 
-egy parancssoros felhasználói felület (CLI - command line interface) 
-az adathalmaz generálásához és 
-egy grafikus felhasználói felület (GUI - graphical user interface) 
-az átalakítások szemléltetéséhez és az adathalmaz böngészéséhez. 
-Mindkét felhasználói felület nyelve angol.
+A szoftver két felhasználói felülettel rendelkezik.
+Az egyik egy parancssoros (CLI) program az adathalmaz generálásához,
+a másik egy grafikus (GUI) alkalmazás az átalakítások szemléltetéséhez és az adathalmaz böngészéséhez.
+Mindkét alkalmazás felületének nyelve angol.
 
 \section{Futtatási környezet}
 
-Az alkalmazás egy Python 3.10-es vagy újabb verziójú Python interpreterrel futtatható.
-A futtatáshoz az alakalmazás függőségeit installálni kell a pip csomagkezelővel.
-A függőségek a projekt mappában a \emph{requirements.txt} fájlban találhatók, 
+Mivel a Python egy iterpretált programozási nyelv a szoftver legegyszerűbben
+a forráskód könyvtárából futtatható, ez a szoftver git repójának \emph{dataset} könyvtára,
+de a következőkben az egyszerűség kedvéért mint \textbf{forrás} könyvtár fogok rá hivatkozni.
+
+A szoftver egy Python 3.10-es vagy újabb verziójú Python interpreterrel futtatható.
+A futtatáshoz a függőségeket installálni kell a pip csomagkezelővel.
+A függőségek a forrás könyvtárában, a \emph{requirements.txt} fájlban találhatók,
 és a következő paranccsal installálhatók:
-\begin{lstlisting}
-$ pip install -r requirements.txt
+
+\begin{lstlisting}[language=bash]
+	$ pip install -r requirements.txt
 \end{lstlisting}
 
 \section{Adatbázis beállítása}
-Az alkalmazás működéséhez sükség van egy elérhető \emph{mongodb} adatbázisra.
-Ezt a projekt \emph{config} könyvtárában található \emph{default.ini} konfigfájlban lehet beállítani.
 
-Három paraméter szükséges:
-\begin{itemize}
-	\item \emph{host} - host neve (URL), pl.: localhost
-	\item \emph{port} - port száma (egész), pl.: 27017
-	\item \emph{database} - adatbázis neve
-\end{itemize}
+A szoftvernek az adathalmaz generálásához szüksége van egy \emph{mongodb} adatbázisra.
+Az adatbázis kiszűri a kódpárok generálása közben a duplikált kódokat
+és az adatok lekérdezését is megkönnyíti.
+Azért döntöttem a \emph{mongodb} mellett, mert az SQL adatbázisoknál sokkal flexibilisebb.
+A \emph{monogodb} telepítéséről következő linken olvashatunk \cite{installMongodb}.
+
+Az adatbázis elérést a forrás könyvtárában a \emph{config/default.ini} útvonal alatt található
+konfigfájlban lehet beállítani.
+Egy adatbázist három paraméter határoz meg: \emph{host}, \emph{port}, \emph{database} (az adatbázis neve).
+Ha szükség van rá a konfigfájl alapértékeit átírhatjuk.
 
 \section{Adathalmazt generáló CLI}
 
-Ezzel a CLI alkalmazással van lehetőségünk egy adathalmaz generálására.
+Ezzel a CLI alkalmazással van lehetőségünk az adathalmaz generálására egy
+adott csv fájlban található kódokból vagy egy könyvtárban taláható forrásfájlokból.
+Adathalmazt a következő paranccsal generálhatunk:
 
-\subsection{Alkalmazás használata}
-
-Az alkalmazás a projekt könyvtárból indítható a következő paranccsal:
-
-\begin{lstlisting}
-$ python -m source.persistor <mode> <path>
+\begin{lstlisting}[language=bash]
+	$ python -m source.persistor <mode> <path>
 \end{lstlisting}
 
-Két paraméter szükséges:
+A parancs paraméterei a következők:
+
 \begin{enumerate}
 	\item\label{step:first} \emph{mode} - az adatok forrásának típusa,
 	lehetséges értékek:
@@ -49,163 +53,193 @@ Két paraméter szükséges:
 		\item \emph{csv} - csv fájlból olvassa a forrásfájlok tartalmát
 		\item \emph{dir} - könyvtárból rekurzívan olvassa a forrásfájlokat
 	\end{itemize}
-	\item \emph{path} - az adatok forrásának elérési útvonala, 
-	csv olvasása esetén a forráskódok csak az első oszlopban lehetnek
+	\item \emph{path} - az adatok forrásának elérési útvonala
 \end{enumerate}
+
+Ha megadtuk a parancsot a program megpróbálja a forráskódok olvasását,
+ha az input nem megfelelő leáll.
+
+Futás közben a program a kiírja az éppen feldolgozott forráskóddal kapcsolatos információkat,
+például a kódon végzett átalakítások számát és azt, hogy el tudta-e menteni az átalakítások eredményeit.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth,frame]{log}
-	\caption{A program a kiírja a feldolgozott fájllal kapcsolatos adatokat.}
+	\includegraphics[width=0.9\textwidth,frame]{images/screenshots/log.png}
+	\caption{A CLI alkalmazás futás közben}
 \end{figure}
+
+\pagebreak
+
+Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat leáll.
+Miután a program leállt a forráskód-párok már az adatbázisban vannak.
+A \emph{mongoexport} eszköz segítségével
+az adatbázisból a forráskód-párokat egy csv fájlba exportálhatjuk.
 
 \section{Átalakításokat szemléltető GUI}
 
-Ez a GUI alkamazás szemlélteti az átalakításokat. 
-Kipróbálhatunk vele egy vagy több átalakítást, vizualizáhatjuk kódok absztrakt szintaxis fáját, 
+Ez a GUI alkamazás szemlélteti az átalakításokat.
+Kipróbálhatunk vele egy vagy több átalakító szabályt, vizualizálhatjuk kódok absztrakt szintaxis fáját,
 és az adatbázisba bekerült átalakítások eredményét is megnézhetjük.
 
-\section{Képek, ábrák}
+\subsection{Alkalmazás indítása}
 
-Aliquam vehicula luctus mi a pretium. Nulla quam neque, maximus nec velit in, aliquam mollis tortor. Aliquam erat volutpat. Curabitur vitae laoreet turpis. Integer id diam ligula. Nulla sodales purus id mi consequat, eu venenatis odio pharetra. Cras a arcu quam. Suspendisse augue risus, pulvinar a turpis et, commodo aliquet turpis. Nulla aliquam scelerisque mi eget pharetra. Mauris sed posuere elit, ac lobortis metus. Proin lacinia sit amet diam sed auctor. Nam viverra orci id sapien sollicitudin, a aliquam lacus suscipit, \ref{fig:example-1}.~ábra:
+Az alkalmazás a forrás könyvtárából indítható a következő paranccsal:
+
+\begin{lstlisting}[language=bash]
+	$ python -m source
+\end{lstlisting}
+
+A parancs kiadása után felugró ablakban beállíhatjuk az adatbázis kapcsolathoz szükséges paramétereket:
+a \emph{host}, \emph{port} illetve \emph{database} értékeit.
+A \emph{Connect} gombra kattintva az alkalmazás adatbáziseléréssel indul,
+ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud, különben adatbáziselérés nélkül.
+Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmazást.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\textwidth,height=100px]{elte_cimer_szines}
-	\caption{Quisque ac tincidunt leo}
-	\label{fig:example-1}
+	\includegraphics[width=0.5\textwidth]{images/screenshots/launcher.png}
+	\caption{Az alkalmazást indító ablak}
 \end{figure}
 
-\subsection{Képek szegélyezése}
+\subsection{Alkalmazás felülete}
 
-Ut aliquet nec neque eget fermentum. Cras volutpat tellus sed placerat elementum. Quisque neque dui, consectetur nec finibus eget, blandit id purus. Nam eget ipsum non nunc placerat interdum.
+Az alkalmazás felülete funkciók szerint két fő nézetre osztható, a refaktoráló és az adatbázis-böngésző nézetre.
+A refaktoráló nézetben (\emph{Refactor} tab) egy kódon
+ekvivalensen és nem ekvivalensen átalakító szabályokat próbálhatunk ki, és elmenthetjük
+a szabályok által végzett átalakítások eredményeit.
+Az adatbázis-böngésző (\emph{Database} tab) nézetben az adatbázisba bekerült kódpárokat tekinthetjük meg.
+A fájlok olvasásáért, az AST-k gráfos ábrázolásáért és a segítségért felelő gombok, illetve a 
+beállításokat mutató állapotsor a két fő nézeten kívül helyezkednek el.
+
+\subsection{Refaktoráló nézet}
+
+Indítás után a felhasználót a refaktoráló nézet fogadja.
+Egy Python forráskód átalakításához a kódot begépelhetjük a \emph{Source Code} szöveges input mezőbe,
+vagy egy \emph{.py} fájlból is betölthetjük a menüben látható \emph{Open File} gombra kattintva.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\textwidth,height=100px,frame]{elte_cimer_szines}
-	\caption{Quisque ac tincidunt leo}
+	\includegraphics[width=0.9\textwidth]{images/screenshots/refactor_tab_1.png}
+	\caption{Refaktoráló nézet az indítás után}
 \end{figure}
 
-\subsection{Képek csoportosítása}
-
-In non ipsum fermentum urna feugiat rutrum a at odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla tincidunt mattis nisl id suscipit. Sed bibendum ac felis sed volutpat. Nam pharetra nisi nec facilisis faucibus. Aenean tristique nec libero non commodo. Nulla egestas laoreet tempus. Nunc eu aliquet nulla, quis vehicula dui. Proin ac risus sodales, gravida nisi vitae, efficitur neque, \ref{fig:example-2}.~ábra:
+Az átalakítás előtt a begépelt vagy betöltött forráskódból az elemező (parser) futtatásával 
+létre kell hozni egy AST-t, 
+ezt a \emph{Parse Source AST} gombbal tehetjük meg. Ha a megadott forráskódban szintaxis hiba található, 
+vagy valami egyéb okból kifolyólag nem elemezhető, akkor az alkalmazás ezt jelzi egy felugró 
+párbeszéd-ablakkal. Akkor is jelez ha parse-olás nélkül klikkelünk az átalakító gombra.
 
 \begin{figure}[H]
 	\centering
-	\subcaptionbox{Vestibulum quis mattis urna}{
-		\includegraphics[width=0.45\linewidth]{elte_cimer_szines}}
+	\subcaptionbox{elemzési hiba esetén}{
+		\includegraphics[width=0.5\linewidth]{images/screenshots/syntax_error.png}}
 	\hspace{5pt}
-	\subcaptionbox{Donec hendrerit quis dui sit amet venenatis}{
-		\includegraphics[width=0.45\linewidth]{elte_cimer_szines}}
-	\caption{Aenean porttitor mi volutpat massa gravida}
-	\label{fig:example-2}
+	\subcaptionbox{hiányzó AST esetén}{
+		\includegraphics[width=0.31\linewidth]{images/screenshots/no_ast_parsed.png}}
+	\caption{Hibákat jelző párbeszéd-ablakok}
 \end{figure}
 
-Nam et nunc eget elit tincidunt sollicitudin. Quisque ligula ipsum, tempor vitae tortor ut, commodo rhoncus diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus vehicula quam dui, eu convallis metus porta ac.
+Sikeres elemzés után az AST felépítését a \emph{Source AST} fa-nézeten láthatjuk, 
+az első oszlopban a csúcs típusa, a második oszlopban a csúcs szintaxis fájából generált kód látható. 
+Elemzés után a fát átalakíthatjuk a \emph{Transform AST} gombra kattintva, 
+ekkor az átalakított fa megjelenik a bal oldali \emph{Transformed AST} fa-nézeten,
+az átalakított fából generált kód pedig a \emph{Transformed Code} readonly szövegdobozban.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{images/screenshots/refactor_tab_2.png}
+	\caption{Példa egy átalakítás eredményére}
+\end{figure}
 
-\section{Táblázatok}
+Az alkalmazásba összesen 28 átalakító szabály van, ezek közül 16 ekvivalens és 12 nem ekvivalens
+eredményt állít elő.
+Az alkalmazás indításakor az összes ekvivalens szabály ki van választva,
+ez az alkalmazás alapbeállítása amit a \emph{'rules - default'} felirat jelez az állapotsorban.
 
-Nam magna ex, euismod nec interdum sed, sagittis nec leo. Nam blandit massa bibendum mattis tristique. Phasellus tortor ligula, sodales a consectetur vitae, placerat vitae dolor. Aenean consequat in quam ac mollis. 
+Lehetőségünk van általunk választott szabályok alkalmazására is.
+A szabályok listája a bal oldali panelen látható. Minden szabály előtt van egy checkbox
+amivel a szabályt kiválaszthatjuk. Lehetőségünk van egy vagy több szabály kiválasztására is,
+így könnyen tesztelhetjük egy szabály működését is.
+Ha vannak kiválasztott szabályok azt a \emph{'rules - custom'} felirat jelzi az állapotsorban.
+
+Átalakításkor a szabályok a bal oldali panelen látható sorrendben, fentről lefele kerülnek végrehajtásra.
+A panelen a szabályokon kívül található még két checkbox is,
+ezekkel a \emph{ruff} formatter és az átnevező szabályok alkalmazását tudjuk beállítani.
+
+Miután átalakítottunk egy forráskódot kimenthetjük az átalakítás eredményét az adatbázisba
+(ha van adatbázis kapcsolat).
+Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombbal tehetjük meg.
+Ha az átalakítást nem lehet elmenteni azt az alkalmazás párbeszéd-ablakban jelzi.
+
+\subsection{AST-k vizualizálása fagráffal}
+
+Az alkalmazás fagráfként is tud AST-ket vizualizálni.
+Az általunk megadott vagy átalakított kód AST-jének fagráfját a menüben látható
+\emph{Show AST} lenyíló menügombbal vizualizálhatjuk.
+A gombra klikkelve két opció közül választhatunk:
+a \emph{Source} gomb az általunk megadott kód, a \emph{Transformed} gomb pedig az átalakított kód
+AST-jét vizualizálja, ha ezek léteznek.
+Az alkalmazás az elkészült fagráf ábráját egy felugró ablakban nyitja meg.
+Az alábbi ábrán például a \emph{helloworld} Python kódjának AST-jét láthatjuk:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/figs/ast_graph.png}
+	\caption{A \emph{helloworld} program AST-je}
+\end{figure}
+
+\subsection{Adatbázis-böngésző nézet}
+
+Ebben a nézetben megtekinthetjük az adatbázisba bekerült forráskód-párokat.
+A nézet csak akkor jön létre ha az alkalmazásnak van adatbázis elérése,
+ha nincs azt a nézeten a \emph{"No database connection."} felirat jelzi.
+A nézet feladata a forráskód-párok listázása és a párba állított forráskódok
+különbségeinek megjelenítése.
+
+A különbségeket két forráskód között könnyen vizualizálhatjuk egy diffel,
+egy olyan szövegösszehasonlító programmal ami két szöveg között a különbségek
+listáját állítja elő.
+A különbségeket a forráskód-párokban ezzel a módszerrel vizualizálom.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{images/screenshots/database_tab.png}
+	\caption{Adatbázis-böngésző nézet}
+\end{figure}
+
+A nézet tetején találhatók a diffeket megjelenítő szövegdobozok, ezek alatt
+egy táblázat látható, soraiban az adatbázisba bekerült forráskód-párokkal.
+A táblázat soraiban található adatok sémáját az alábbi táblázat írja le:
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{ | m{0.25\textwidth} | m{0.65\textwidth} | }
+	\begin{tabular}{ | m{0.1\textwidth} | m{0.15\textwidth} | m{0.65\textwidth} | }
 		\hline
-		\textbf{Phasellus tortor} & \textbf{Aenean consequat} \\
+		\textbf{Oszlop} & \textbf{Típus} & \textbf{Magyarázat} \\
 		\hline \hline
-		\emph{Sed malesuada} & Aliquam aliquam velit in convallis ultrices. \\
+		\emph{id} & object id & az eredeti forrráskód azonosítója \\
 		\hline
-		\emph{Purus sagittis} &  Quisque lobortis eros vitae urna lacinia euismod. \\
+		\emph{method} & string &
+		az átalakításra használt módszerre utal 
+		
+		(például a szabályhalmazra) \\
 		\hline
-		\emph{Pellentesque} & Curabitur ac lacus pellentesque, eleifend sem ut, placerat enim. Ut auctor tempor odio ut dapibus. \\
+		\emph{source} & string & az eredeti forráskód sorainak száma \\
+		\hline
+		\emph{result} & string & az átalakított forráskód sorainak száma \\
+		\hline
+		\emph{rules} & string & az átalakításnál alkalmazott szabályok listája \\
 		\hline
 	\end{tabular}
-	\caption{Maecenas tincidunt non justo quis accumsan}
+	\caption{Adatbázis-böngésző nézet táblázatának oszlopai}
 	\label{tab:example-1}
 \end{table}
 
-\subsection{Sorok és oszlopok egyesítése}
+Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk
+akkor a diff nézetben megjelennek az eredeti (bal oldali) és átakított (jobb oldali)
+kód közti különbségek.
 
-Mauris a dapibus lectus. Vestibulum commodo nibh ante, ut maximus magna eleifend vel. Integer vehicula elit non lacus lacinia, vitae porttitor dolor ultrices. Vivamus gravida faucibus efficitur. Ut non erat quis arcu vehicula lacinia. Nulla felis mauris, laoreet sed malesuada in, euismod et lacus. Aenean at finibus ipsum. Pellentesque dignissim elit sit amet lacus congue vulputate.
-
-\begin{table}[htb]
-	\centering
-	\begin{tabular}{ | c | r | r | r | r | r | r | }
-		\hline
-		\multirow{2}{*}{\textbf{Quisque}} & \multicolumn{2}{ c | }{\textbf{Suspendisse}} & \multicolumn{2}{ c | }{\textbf{Aliquam}} & \multicolumn{2}{ c | }{\textbf{Vivamus}} \\
-		\cline{2-7}
-		& Proin & Nunc & Proin & Nunc & Proin & Nunc \\
-		\hline \hline		
-		Leo & 2,80 MB & 100\% & 232 KB & 8,09\% & 248 KB & 8,64\% \\
-		\hline
-		Vel & 9,60 MB & 100\% & 564 KB & 5,74\% & 292 KB & 2,97\% \\
-		\hline
-		Auge & 78,2 MB & 100\% & 52,3 MB & 66,88\% & 3,22 MB & 4,12\% \\
-		\hline 
-	\end{tabular}
-	\caption[Rövid cím a táblázatjegyzékbe]{Vivamus ac arcu fringilla, fermentum neque sed, interdum erat. Mauris bibendum mauris vitae enim mollis, et eleifend turpis aliquet.}
-	\label{tab:example-2}
-\end{table}
-
-\subsection{Több oldalra átnyúló táblázatok}
-
-Nunc porta placerat leo, sit amet porttitor dui porta molestie. Aliquam at fermentum mi. Maecenas vitae lorem at leo tincidunt volutpat at nec tortor. Vivamus semper lacus eu diam laoreet congue. Vivamus in ipsum risus. Nulla ullamcorper finibus mauris non aliquet. Vivamus elementum rhoncus ex ut porttitor.
-
-\begin{center}
-	\begin{longtable}{ | p{0.3\textwidth} | p{0.7\textwidth} | }
-		
-		\hline
-		\multicolumn{2}{|c|}{\textbf{Praesent aliquam mauris enim}}
-		\\ \hline
-		
-		\emph{Suspendisse potenti} & \emph{Lorem ipsum dolor sit amet}
-		\\ \hline \hline
-		\endfirsthead % első oldal fejléce
-		
-		\hline
-		\emph{Suspendisse potenti} & \emph{Lorem ipsum dolor sit amet}
-		\\ \hline \hline
-		\endhead % többi oldal fejléce
-		
-		\hline
-		\endfoot % többi oldal lábléce
-		
-		\endlastfoot % utolsó oldal lábléce
-		
-		\emph{Praesent}
-		& Nulla ultrices et libero sit amet fringilla. Nunc scelerisque ante tempus sapien placerat convallis.
-		\\ \hline
-		
-		\emph{Luctus}
-		& Integer hendrerit erat massa, non hendrerit risus convallis at. Curabitur ultrices, justo in imperdiet condimentum, neque tortor luctus enim, luctus posuere massa erat vitae nibh.
-		\\ \hline
-		
-		\emph{Egestas}
-		& Duis fermentum feugiat augue in blandit. Mauris a tempor felis. Pellentesque ultricies tristique dignissim. Pellentesque aliquam semper tristique. Nam nec egestas dolor. Vestibulum id elit quis enim fringilla tempor eu a mauris. Aliquam vitae lacus tellus. Phasellus mauris lectus, aliquam id leo eget, auctor dapibus magna. Fusce lacinia felis ac elit luctus luctus.
-		\\ \hline
-		
-		\emph{Dignissim}
-		& Praesent aliquam mauris enim, vestibulum posuere massa facilisis in. Suspendisse potenti. Nam quam purus, rutrum eu augue ut, varius vehicula tellus. Fusce dui diam, aliquet sit amet eros at, sollicitudin facilisis quam. Phasellus tempor metus vel augue gravida pretium. Proin aliquam aliquam blandit. Nulla id tempus mi. Fusce in aliquam tortor.
-		\\ \hline
-		
-		\emph{Pellentesque}
-		& Donec felis nibh, imperdiet a arcu non, vehicula gravida nibh. Quisque interdum sapien eu massa commodo, ac elementum felis faucibus.
-		\\ \hline
-		
-		\emph{Molestie}
-		& Cras ullamcorper tellus et auctor ultricies. Maecenas tincidunt euismod lectus nec venenatis. Suspendisse potenti. Pellentesque pretium nunc ut euismod cursus. Nam venenatis condimentum quam. Curabitur suscipit efficitur aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-		\\ \hline
-		
-		\emph{Vivamus semper}
-		& In purus purus, faucibus eu libero vulputate, tristique sodales nunc. Nulla ut gravida dolor. Fusce vel pellentesque mi, vel efficitur eros. Nunc vitae elit tellus. Sed vestibulum auctor consequat. 
-		\\ \hline
-		
-		\emph{Condimentum}
-		& Nulla scelerisque, leo et facilisis pretium, risus enim cursus turpis, eu suscipit ipsum ipsum in mauris. Praesent eget pulvinar ipsum, suscipit interdum nunc. Nam varius massa ut justo ullamcorper sollicitudin. Vivamus facilisis suscipit neque, eu fermentum risus. Ut at mi mauris.
-		\\ \hline
-		
-		\caption{Praesent ullamcorper consequat tellus ut eleifend}
-		\label{tab:example-3}		
-	\end{longtable}
-\end{center}
+A táblázat felleti keresőt használathatjuk a forráskód-párok böngészéséhez.
+A kereső az összes sorban és oszlopban szereplő adatok közt keres.
+Például megkereshetjük, hogy az adatbázisban mely forráskódokon kerültek
+for ciklussal kapcsolatos átalakítások alkalmazásra.

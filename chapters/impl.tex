@@ -1,8 +1,13 @@
 \chapter{Fejlesztői dokumentáció}
 \label{ch:impl}
 
+\textbf{TODO: intro}
+
+\section{Csomagok}
+
 A szoftver forráskódja több csomagban és modulban található.
-A forrráskód jelentős része öt fő csomagba van szerveze.
+A forrráskód jelentős része öt fő csomagba van szerveze,
+ezek az alábbi táblázatban láthatók.
 
 \begin{table}[H]
 	\centering
@@ -25,97 +30,70 @@ A forrráskód jelentős része öt fő csomagba van szerveze.
 	\label{tab:packages}
 \end{table}
 
-\section{Csomagok}
-
 Minden csomag a szoftver egy jól elkülöníthető részét vagy funkcióját valósítja meg.
 A fő csomagok (a \emph{tests} csomag kivételével) nem tartalmaznak "futtatható" fájlokat,
 a belépési pontok külön modulokba vannak szervezve.
 
-\subsection{\emph{app} csomag}
+\section{\emph{app} csomag}
 
-Az \emph{app} csomag feladata az átalakításokat szemléltető grafikus felhasználói
-felületű alkalmazás megvalósítása.
-Az alkalmazás architektúrája MVC (Model-View-Controller) szerű.
+Az \emph{app} csomag feladata az átalakításokat szemléltető GUI-s alkalmazás megvalósítása.
+Az alkalmazás architektúrája model-nézet-kontroller (MVC) szerű.
+Egy nézet rendelkezik egy kontrollerrel és a kontroller pedig egy modellel.
 
-Az alkalmazásban két féle model különböztethető meg: állapot és adatelérési modelek.
-Az alkalmazás állapotának modelje az \emph{app.appstate} modulban található.
+A nézet feladata a GUI definiálása és frissítése,
+a model feladata az adatelérés vagy az alkalmazás állapotának modelezése.
+A kontroller ezt a két réteget köti össze,
+így a nézet nem függ a modeltől és a model sem a nézettől.
+
+Tegyük fel, hogy a nézeten történik egy GUI esemény, például a felhasználó egy gombra klikkel,
+aminek az eseménykezelője a model használatát igényli.
+Ekkor az eseménykezelő a nézet kontrollerének továbbítja a megfelelő adatokat.
+A kontroller használja a modelt, majd a nézetet direk vagy indirekt módon frissíti.
+Direkt módon frissíti, ha a modeltől kapott adatokat a nézetnek továbbítja,
+ha pedig egy eseményt vált ki a modelben aminek hatására a nézet frissül akkor indirekt frissíti.
+Ezt a működést az alábbi ábrán láthatjuk.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{images/figs/mvc.eps}
+	\caption{Egy esemény kezelése az MVC architektúrában}
+\end{figure}
+
+\subsection{Állapotmodel}
+
+Az alkalmazásban kétféle model különböztethető meg: az állapot és adatelérési modelek.
+Az alkalmazás állapotmodelje az \emph{app.appstate} modulban található.
 Az adatelérési modelek nem az alkalmazás csomagjában vannak definiálva mivel 
 a szoftver más rétegeinek is szüksége van ezekre.
+
+Az állapotmodel az \emph{observer} tervezési mintát használja a nézetek frissítésére
+és az \emph{AppState} osztályban van definiálva.
+Az \emph{AppState} osztály az \emph{Observable} osztályból származik,
+ezért rendelkezik megfigyelők (\emph{observers}) egy listájával,
+ami esemény-eseménykezelő párok listája.
+
+Ha a nézet egy komponenesét az állapotmodel változásának hatására akarjuk frissíteni,
+akkor azt az eseménykezelőt, ami frissíti, hozzárendelhetjük az állapotmodel egy eseményéhez.
+
+Hozzárendelni egy eseménykezelőt egy eseményhez az \emph{Observable} osztály \emph{attach}
+metódusával lehet.
+Ha az adott eseményt kiváltja egy változás a modelben, akkor a model értesíti a nézeteket,
+vagyis az \emph{observers}-ben az eseményéhez rendelt eseménykezelőket meghívja,
+a frissítéshez szükséges adatokat paraméterként továbbítva.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{images/uml/AppState.eps}
+	\caption{Állapotmodel UML diagramja}
+\end{figure}
+
+\pagebreak
 
 A felhasználói felület (View-réteg) kódja a \emph{app.views} csomagban található,
 a Python-ban alapból megtalálható \emph{tkinter} könyvtárt használja, amit az 
 erre építő \emph{ttkbootstrap} könyvtárral egészít ki.
 
 A kontrollerek feladata a kommunikáció a modelek és nézetek között.
-Csak a felhasználói felület két fő nézete a \emph{RefactorTab} és a \emph{DatabaseTab} 
+Csak a felhasználói felület két fő nézete
+a \emph{RefactorTab} és a \emph{DatabaseTab} 
 rendelkeznek saját kontrollerekkel.
-
-A model és nézet szétválasztása érdekében az állapot modelje az \emph{observer} 
-tervezési mintát használja a nézetek frissítésére.
-
-\section{Forráskódok}
-
-Nulla sodales purus id mi consequat, eu venenatis odio pharetra. Cras a arcu quam. Suspendisse augue risus, pulvinar a turpis et, commodo aliquet turpis. Nulla aliquam scelerisque mi eget pharetra. Mauris sed posuere elit, ac lobortis metus. Proin lacinia sit amet diam sed auctor. Nam viverra orci id sapien sollicitudin, a aliquam lacus suscipit. Quisque ac tincidunt leo \ref{src:cpp}. és \ref{src:csharp}.~forráskód:
-
-\lstset{caption={Hello World in C++}, label=src:cpp}
-\begin{lstlisting}[language={C++}]
-#include <stdio>
-
-int main() 
-{
-	int c;
-	std::cout << "Hello World!" << std::endl;
-
-	std::cout << "Press any key to exit." << std::endl;
-	std::cin >> c;
-	
-	return 0;
-}
-\end{lstlisting}
-
-\lstset{caption={Hello World in C\#}, label=src:csharp}
-\begin{lstlisting}[language={[Sharp]C}]
-using System;
-namespace HelloWorld
-{
-	class Hello 
-	{
-		static void Main() 
-		{
-			Console.WriteLine("Hello World!");
-			
-			Console.WriteLine("Press any key to exit.");
-			Console.ReadKey();
-		}
-	}
-}
-\end{lstlisting}
-
-\subsection{Algoritmusok}
-
-Az \ref{alg:ibb}.~algoritmus egy általános elágazás és korlátozás algoritmust (\emph{Branch and Bound algorithm}) mutat be. A \ref{step:selrule}.~lépésben egy megfelelő kiválasztási szabályt kell alkalmazni.
-Példa forrása: \href{https://www.inf.u-szeged.hu/actacybernetica/}{Acta Cybernetica (ez egy hiperlink)}.
-
-\begin{algorithm}[H]
-\caption{A general interval B\&B algorithm}
-\label{alg:ibb}
-\textbf{\underline{Funct}} IBB($S,f$)
-\begin{algorithmic}[1] % sorszámok megjelenítése minden n. sor előtt, most n = 1
-\State Set the working list ${\cal L}_W$ := $\{S\}$ and the final list ${\cal L}_Q$ := $\{\}$
-\While{( ${\cal L}_W \neq \emptyset$ )} \label{alg:igoend}
-	\State Select an interval $X$ from ${\cal L}_W$ \label{step:selrule}\Comment{Selection rule}
-	\State Compute $lbf(X)$ \Comment{Bounding rule}
-	\If{$X$ cannot be eliminated} \Comment{Elimination rule}
-		\State Divide $X$ into $X^j,\ j=1,\dots, p$, subintervals   \Comment{Division rule}
-		\For{$j=1,\ldots,p$}
-			\If{$X^j$ satisfies the termination criterion} \Comment{Termination rule}
-				\State Store $X^j$ in ${\cal L}_W$
-			\Else
-				\State Store $X^j$ in ${\cal L}_W$
-			\EndIf
-		\EndFor
-	\EndIf
-\EndWhile
-\State \textbf{return} ${\cal L}_Q$
-\end{algorithmic}
-\end{algorithm}
