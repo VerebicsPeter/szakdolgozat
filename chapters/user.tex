@@ -8,31 +8,26 @@ Mindkét alkalmazás felületének nyelve angol.
 
 \section{Futtatási környezet}
 
-Mivel a Python egy iterpretált programozási nyelv a szoftver legegyszerűbben
-a forráskód könyvtárából futtatható, ez a szoftver git repójának \emph{dataset} könyvtára,
-de a következőkben az egyszerűség kedvéért mint \textbf{forrás} könyvtár fogok rá hivatkozni.
-
 A szoftver egy Python 3.10-es vagy újabb verziójú Python interpreterrel futtatható.
-A futtatáshoz a függőségeket installálni kell a pip csomagkezelővel.
-A függőségek a forrás könyvtárában, a \emph{requirements.txt} fájlban találhatók,
-és a következő paranccsal installálhatók:
+Futtatás előtt a szoftver a függőségeit installálni kell a \emph{pip} csomagkezelővel.
+Ezt a legegyszerűbben a szoftver forráskódjának könyvtárból tehetjük,
+a következő parancs kiadásával:
 
 \begin{lstlisting}[language=bash]
-	$ pip install -r requirements.txt
+	$ pip install --editable .
 \end{lstlisting}
 
 \section{Adatbázis beállítása}
 
-A szoftvernek az adathalmaz generálásához szüksége van egy \emph{mongodb} adatbázisra.
+Az adathalmaz generálásához szüksége van egy \emph{mongodb} adatbázis kliensre \cite{installMongodb}.
 Az adatbázis kiszűri a kódpárok generálása közben a duplikált kódokat
 és az adatok lekérdezését is megkönnyíti.
 Azért döntöttem a \emph{mongodb} mellett, mert az SQL adatbázisoknál sokkal flexibilisebb.
-A \emph{monogodb} telepítéséről következő linken olvashatunk \cite{installMongodb}.
 
 Az adatbázis elérést a forrás könyvtárában a \emph{config/default.ini} útvonal alatt található
 konfigfájlban lehet beállítani.
 Egy adatbázist három paraméter határoz meg: \emph{host}, \emph{port}, \emph{database} (az adatbázis neve).
-Ha szükség van rá a konfigfájl alapértékeit átírhatjuk.
+Ha szükséges a konfigfájl alapértékeit átírhatjuk.
 
 \section{Adathalmazt generáló CLI}
 
@@ -67,8 +62,6 @@ például a kódon végzett átalakítások számát és azt, hogy el tudta-e me
 	\includegraphics[width=0.9\textwidth,frame]{images/screenshots/log.png}
 	\caption{A CLI alkalmazás futás közben}
 \end{figure}
-
-\pagebreak
 
 Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat leáll.
 Miután a program leállt a forráskód-párok már az adatbázisban vannak.
@@ -124,7 +117,7 @@ vagy egy \emph{.py} fájlból is betölthetjük a menüben látható \emph{Open 
 \end{figure}
 
 Az átalakítás előtt a begépelt vagy betöltött forráskódból az elemező (parser) futtatásával 
-létre kell hozni egy AST-t, 
+létre kell hozni egy AST-t,
 ezt a \emph{Parse Source AST} gombbal tehetjük meg. Ha a megadott forráskódban szintaxis hiba található, 
 vagy valami egyéb okból kifolyólag nem elemezhető, akkor az alkalmazás ezt jelzi egy felugró 
 párbeszéd-ablakkal. Akkor is jelez ha parse-olás nélkül klikkelünk az átalakító gombra.
@@ -171,6 +164,8 @@ Miután átalakítottunk egy forráskódot kimenthetjük az átalakítás eredm�
 Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombbal tehetjük meg.
 Ha az átalakítást nem lehet elmenteni azt az alkalmazás párbeszéd-ablakban jelzi.
 
+\pagebreak
+
 \subsection{AST-k vizualizálása fagráffal}
 
 Az alkalmazás fagráfként is tud AST-ket vizualizálni.
@@ -184,7 +179,7 @@ Az alábbi ábrán például a \emph{helloworld} Python kódjának AST-jét lát
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.6\textwidth]{images/figs/ast_graph.png}
+	\includegraphics[width=0.6\textwidth]{images/figs/ast_graph.eps}
 	\caption{A \emph{helloworld} program AST-je}
 \end{figure}
 
@@ -236,7 +231,7 @@ A táblázat soraiban található adatok sémáját az alábbi táblázat írja 
 \end{table}
 
 Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk
-akkor a diff nézetben megjelennek az eredeti (bal oldali) és átakított (jobb oldali)
+akkor a diff nézetben megjelennek az eredeti (bal oldali) és az átakított (jobb oldali)
 kód közti különbségek.
 
 A táblázat felleti keresőt használathatjuk a forráskód-párok böngészéséhez.
