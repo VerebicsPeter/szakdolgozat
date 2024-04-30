@@ -13,7 +13,7 @@ Futtatás előtt a szoftver a függőségeit installálni kell a \emph{pip} csom
 Ezt a legegyszerűbben a szoftver forráskódjának könyvtárból tehetjük,
 a következő parancs kiadásával:
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash, numbers=none]
 	$ pip install --editable .
 \end{lstlisting}
 
@@ -22,7 +22,6 @@ a következő parancs kiadásával:
 Az adathalmaz generálásához szüksége van egy \emph{mongodb} adatbázis kliensre \cite{installMongodb}.
 Az adatbázis kiszűri a kódpárok generálása közben a duplikált kódokat
 és az adatok lekérdezését is megkönnyíti.
-Azért döntöttem a \emph{mongodb} mellett, mert az SQL adatbázisoknál sokkal flexibilisebb.
 
 Az adatbázis elérést a forrás könyvtárában a \emph{config/default.ini} útvonal alatt található
 konfigfájlban lehet beállítani.
@@ -35,7 +34,7 @@ Ezzel a CLI alkalmazással van lehetőségünk az adathalmaz generálására egy
 adott csv fájlban található kódokból vagy egy könyvtárban taláható forrásfájlokból.
 Adathalmazt a következő paranccsal generálhatunk:
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash, numbers=none]
 	$ python -m source.persistor <mode> <path>
 \end{lstlisting}
 
@@ -65,20 +64,22 @@ például a kódon végzett átalakítások számát és azt, hogy el tudta-e me
 
 Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat leáll.
 Miután a program leállt a forráskód-párok már az adatbázisban vannak.
+
 A \emph{mongoexport} eszköz segítségével
 az adatbázisból a forráskód-párokat egy csv fájlba exportálhatjuk.
 
 \section{Átalakításokat szemléltető GUI}
 
 Ez a GUI alkamazás szemlélteti az átalakításokat.
-Kipróbálhatunk vele egy vagy több átalakító szabályt, vizualizálhatjuk kódok absztrakt szintaxis fáját,
+Kipróbálhatunk vele egy vagy több átalakító szabályt,
+vizualizálhatjuk kódok absztrakt szintaxis fáját,
 és az adatbázisba bekerült átalakítások eredményét is megnézhetjük.
 
 \subsection{Alkalmazás indítása}
 
 Az alkalmazás a forrás könyvtárából indítható a következő paranccsal:
 
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[language=bash, numbers=none]
 	$ python -m source
 \end{lstlisting}
 
@@ -96,13 +97,15 @@ Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmaz
 
 \subsection{Alkalmazás felülete}
 
-Az alkalmazás felülete funkciók szerint két fő nézetre osztható, a refaktoráló és az adatbázis-böngésző nézetre.
+Az alkalmazás felülete funkciók szerint két fő nézetre osztható,
+a refaktoráló és az adatbázis-böngésző nézetre.
+A menü gombjai és az állapotsor szövegei a két fő nézeten kívül helyezkednek el.
+
 A refaktoráló nézetben (\emph{Refactor} tab) egy kódon
 ekvivalensen és nem ekvivalensen átalakító szabályokat próbálhatunk ki, és elmenthetjük
 a szabályok által végzett átalakítások eredményeit.
+
 Az adatbázis-böngésző (\emph{Database} tab) nézetben az adatbázisba bekerült kódpárokat tekinthetjük meg.
-A fájlok olvasásáért, az AST-k gráfos ábrázolásáért és a segítségért felelő gombok, illetve a 
-beállításokat mutató állapotsor a két fő nézeten kívül helyezkednek el.
 
 \subsection{Refaktoráló nézet}
 
@@ -116,8 +119,8 @@ vagy egy \emph{.py} fájlból is betölthetjük a menüben látható \emph{Open 
 	\caption{Refaktoráló nézet az indítás után}
 \end{figure}
 
-Az átalakítás előtt a begépelt vagy betöltött forráskódból az elemező (parser) futtatásával 
-létre kell hozni egy AST-t,
+Az átalakítás előtt a begépelt vagy betöltött forráskódból létre kell hozni egy AST-t
+az elemező (parser) futtatásával,
 ezt a \emph{Parse Source AST} gombbal tehetjük meg. Ha a megadott forráskódban szintaxis hiba található, 
 vagy valami egyéb okból kifolyólag nem elemezhető, akkor az alkalmazás ezt jelzi egy felugró 
 párbeszéd-ablakkal. Akkor is jelez ha parse-olás nélkül klikkelünk az átalakító gombra.
@@ -134,6 +137,7 @@ párbeszéd-ablakkal. Akkor is jelez ha parse-olás nélkül klikkelünk az áta
 
 Sikeres elemzés után az AST felépítését a \emph{Source AST} fa-nézeten láthatjuk, 
 az első oszlopban a csúcs típusa, a második oszlopban a csúcs szintaxis fájából generált kód látható. 
+
 Elemzés után a fát átalakíthatjuk a \emph{Transform AST} gombra kattintva, 
 ekkor az átalakított fa megjelenik a bal oldali \emph{Transformed AST} fa-nézeten,
 az átalakított fából generált kód pedig a \emph{Transformed Code} readonly szövegdobozban.
@@ -161,10 +165,8 @@ ezekkel a \emph{ruff} formatter és az átnevező szabályok alkalmazását tudj
 
 Miután átalakítottunk egy forráskódot kimenthetjük az átalakítás eredményét az adatbázisba
 (ha van adatbázis kapcsolat).
-Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombbal tehetjük meg.
+Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombra kattintva tehetjük.
 Ha az átalakítást nem lehet elmenteni azt az alkalmazás párbeszéd-ablakban jelzi.
-
-\pagebreak
 
 \subsection{AST-k vizualizálása fagráffal}
 
@@ -192,7 +194,7 @@ A nézet feladata a forráskód-párok listázása és a párba állított forr�
 különbségeinek megjelenítése.
 
 A különbségeket két forráskód között könnyen vizualizálhatjuk egy diffel,
-egy olyan szövegösszehasonlító programmal ami két szöveg között a különbségek
+azaz olyan szövegösszehasonlító programmal, ami szöveg közti a különbségek
 listáját állítja elő.
 A különbségeket a forráskód-párokban ezzel a módszerrel vizualizálom.
 
@@ -204,37 +206,46 @@ A különbségeket a forráskód-párokban ezzel a módszerrel vizualizálom.
 
 A nézet tetején találhatók a diffeket megjelenítő szövegdobozok, ezek alatt
 egy táblázat látható, soraiban az adatbázisba bekerült forráskód-párokkal.
-A táblázat soraiban található adatok sémáját az alábbi táblázat írja le:
+A táblázat soraiban található adatok sémáját a \ref{tab:schema}. táblázat írja le.
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{ | m{0.1\textwidth} | m{0.15\textwidth} | m{0.65\textwidth} | }
+	\begin{tabular}{ | m{0.15\textwidth} | m{0.75\textwidth} | }
 		\hline
-		\textbf{Oszlop} & \textbf{Típus} & \textbf{Magyarázat} \\
+		\textbf{Oszlop} & \textbf{Magyarázat} \\
 		\hline \hline
-		\emph{id} & object id & az eredeti forrráskód azonosítója \\
+
+		\emph{id}
+		& az eredeti forrráskód azonosítóját tartalmazó oszlop \\
 		\hline
-		\emph{method} & string &
-		az átalakításra használt módszerre utal 
+		
+		\emph{method}
+		& az átalakításra használt módszerre utaló oszlop
 		
 		(például a szabályhalmazra) \\
 		\hline
-		\emph{source} & string & az eredeti forráskód sorainak száma \\
+		
+		\emph{source}
+		& az eredeti forráskód sorainak számát tartalmazó oszlop \\
 		\hline
-		\emph{result} & string & az átalakított forráskód sorainak száma \\
+		
+		\emph{result}
+		& az átalakított forráskód sorainak számát tartalmazó oszlop \\
 		\hline
-		\emph{rules} & string & az átalakításnál alkalmazott szabályok listája \\
+		
+		\emph{rules}
+		& az átalakításnál alkalmazott szabályok listája (szöveg) \\
 		\hline
 	\end{tabular}
 	\caption{Adatbázis-böngésző nézet táblázatának oszlopai}
-	\label{tab:example-1}
+	\label{tab:schema}
 \end{table}
 
 Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk
 akkor a diff nézetben megjelennek az eredeti (bal oldali) és az átakított (jobb oldali)
 kód közti különbségek.
 
-A táblázat felleti keresőt használathatjuk a forráskód-párok böngészéséhez.
+A táblázat feletti keresőt használathatjuk a forráskód-párok böngészéséhez.
 A kereső az összes sorban és oszlopban szereplő adatok közt keres.
 Például megkereshetjük, hogy az adatbázisban mely forráskódokon kerültek
 for ciklussal kapcsolatos átalakítások alkalmazásra.
