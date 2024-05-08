@@ -1,7 +1,7 @@
 \chapter{Fejlesztői dokumentáció}
 \label{ch:impl}
 
-Ebben a fejezetben a szoftver működését részletezem.
+Ebben a fejezetben az általam létrehozott szoftver működését mutatom be.
 A szoftver felépítését, a felhasznált tervezési mintákat és
 a fontosabb algoritmusok működését is bemutatom.
 A szoftver forráskódja a jövőben változhat,
@@ -13,7 +13,7 @@ A szoftver forráskódja több csomagban és modulban található.
 Minden csomag a szoftver egy jól elkülöníthető rétegét valósítja meg,
 például az alkalmazási réteget vagy az átalakításokért felelő réteget.
 
-A forráskód öt csomagba van szerveze, ezek az alábbi táblázatban láthatók.
+A forráskód öt csomagba van szerveze, ezek az alábbi táblázatban láthatóak.
 
 \begin{table}[H]
 	\centering
@@ -50,7 +50,7 @@ az általam implementált átalakítások működését részletezem.
 
 Az átalakításokat a Python \emph{ast} moduljával valósítottam meg.
 Az \emph{ast} modul a Python standard könyvárában alapból megtalálható, 
-célja az AST létrehozása, a Python absztrakt-nyelvtanának alapján.
+célja az AST létrehozása a Python absztrakt-nyelvtanának alapján.
 
 A Python absztrakt-nyelvtana a nyelv szintaxisát definiáló környezetfüggetlen nyelvtan,
 leírását az \emph{ast} modul dokumentációjának \cite{pythonAST} elején találhatjuk.
@@ -58,28 +58,25 @@ leírását az \emph{ast} modul dokumentációjának \cite{pythonAST} elején ta
 Az absztrakt-nyelvtan leírásában az AST csúcsainak (node-jainak) típusát az
 \emph{ast.AST}-ből származó osztályok határozzák meg,
 ezekről szintén a dokumentáció elején, a \emph{Node classes} cím alatt olvashatunk.
-
-Egy AST-re tehát általánosan az \emph{ast.AST} osztállyal lehet hivatkozok,
-továbbá az ebből származó node-típusok, vagyis az AST részfái is AST-k.
-
+Egy AST-re tehát általánosan az \emph{ast.AST} osztállyal lehet hivatkozni.
 
 Egy Python forráskód AST-jét az \emph{ast.parse} függvénnyel hozhatjuk létre.
 Az \emph{ast.parse} ekvivalens a Python beépített
 \emph{compile} függvényének \texttt{ast.PyCF\_ONLY\_AST} compiler flaggel való
 meghívásával.
 
-Fontos, hogy AST-t csak olyan forráskódból tudunk létrehozni amiben nincs
+Fontos, hogy AST-t csak olyan forráskódból tudunk létrehozni, amiben nincs
 szintaxis hiba.
-A szintaxis hibákat az \emph{ast.parse} a \emph{SyntaxError} exceptionnel jelzi.
+A szintaxis hibákat az \emph{ast.parse} a \emph{SyntaxError} exception-nel jelzi.
 
 Az \emph{ast} modulban AST-k bejárására és átalakítására alkalmas
-segédfüggvények és segédosztályok is találhatók.
+segédfüggvények és segédosztályok is találhatóak.
 Az általam megvalósított átalakításokban
 az AST bejárását a \emph{NodeVisitor} osztállyal,
 az AST átalakítását pedig a \emph{NodeTransformer} osztállyal
 végzem.
 
-Az átalakított AST-ből a kód generálására a \emph{ast.unparse} függvényt, használom.
+Az átalakított AST-ből a kód generálására a \emph{ast.unparse} függvényt használom.
 
 \subsubsection{A \emph{NodeVisitor} osztály}
 
@@ -88,7 +85,7 @@ Az AST-ket a \emph{NodeVisitor} osztályból származtatott osztályokkal járha
 A \emph{NodeVisitor}-ból származtatott osztályokkal olyan, AST-vel kapcsolatos,
 lekérdezéseket is reprezentálhatunk, amelyek elvégzéséhez az AST bejárása szükséges.
 
-Például egy AST-ben, az adott id-vel rendelkező, \emph{Name} node-ok listáját,
+Például egy AST-ben, az adott id-vel rendelkező, \emph{Name} node-ok listáját
 a \ref{src:NameVisitor}. forráskódon látható \emph{NameVisitor} osztály
 \emph{get\_names} metódusával kaphatjuk meg.
 
@@ -113,7 +110,7 @@ majd elindítja a bejárást a \emph{root}-ra.
 Bejárás után visszaadja a \emph{\_names}-ben összegyűjtött \emph{Name} node-ok listáját.
 
 A bejárást a \emph{NodeVisitor} osztályból örökölt \emph{visit} metódus meghívásával
-lehet elindítani egy AST-re, a bejárás \textbf{mélységi bejárás}.
+lehet elindítani egy AST-re. Ez a bejárás \textbf{mélységi bejárás}.
 
 Bejárás közben a \emph{Name} node-okat a \emph{NodeVisitor} osztály \emph{visit\_Name}
 metdódusának felülírásával látogatjuk meg.
@@ -121,23 +118,21 @@ A meglátogatott \emph{Name} node-ot akkor adjuk a listához,
 ha az id-je egyezik az \emph{\_id}-vel.
 
 Ehhez a példához hasonlóan a \emph{NodeVisitor}-ban az összes node típushoz
-létezik \emph{visit\_<node-class>} visitor metódus, amit felülírhatunk.
+létezik \emph{visit\_<node-class>} visitor metódus amit felülírhatunk.
 
-Fontos megjegyezni, hogy amikor felülírjuk a visitor metódust olyan node-típusoknál,
-amik tartalmazhatnak magukkal megegyező típusú node-ot (például \emph{For} node)
-akkor szükséges a \emph{generic\_visit} hívása a felülírt metódusban
-az összes node meglátogatásához (különben a rekurzió megáll).
+Fontos megjegyezni, hogy amikor felülírjuk a visitor metódust olyan node-típusoknál
+amik tartalmazhatnak magukkal megegyező típusú node-ot (például \emph{For} node),
+akkor az összes node meglátogatásához szükséges a \emph{generic\_visit} hívása
+a felülírt metódusban, különben a rekurzió megáll.
 
-\emph{NodeVisitor}-ból származtatott osztállyal akkor érdemes bejárást végezni ha
-mélységi bejárásra van szükségünk.
-Ennek oka a \emph{NodeVisitor} osztály működése.
+\emph{NodeVisitor}-ból származtatott osztállyal akkor érdemes bejárást végezni,
+ha mélységi bejárásra van szükségünk a \emph{NodeVisitor} osztály működése miatt.
 
 Amikor egy \emph{NodeVisitor}-ból származatott osztályban a bejárás rekurzív hívása történik,
 minden gyerekre a gyerek típusához tartozó visitor metódus kerül meghívásra, ha az létezik.
-Tehát ha a gyerek típusának visitor metódusát felülírtuk, akkor a gyereket azzal fogja meglátogatni.
-Ha nem írtuk felül akkor a \emph{NodeVisitor} osztály
-\emph{generic\_visit} metódusa fogja meglátogatni,
-ami mélységi sorrendben látogatja meg a node-okat.
+Tehát, ha a gyerek típusának visitor metódusát felülírtuk, akkor a gyereket azzal fogja meglátogatni.
+Ha nem írtuk felül, akkor a \emph{NodeVisitor} osztály
+\emph{generic\_visit} metódusa a node-okat mélységi sorrendben látogatja meg.
 Ezért folytat a \emph{NodeVisitor} alapból mélységi bejárást.
 
 A \emph{generic\_visit}-et is felülírhatjuk.
@@ -214,7 +209,7 @@ Egy átalakítás, működése (magas szinten) a következő lépésekből áll:
 \end{enumerate}
 
 Az átalakításokat végző algoritmusok a \emph{transformers}, \emph{transformers\_rename}
-és \emph{visitors} modulokban találhatók, ezek a modulok tartalmazzák az AST-t
+és \emph{visitors} modulokban találhatóak, ezek a modulok tartalmazzák az AST-t
 elemző és változtató osztályokat is.
 
 Az általam definiált átalakítások közül egyedül
@@ -287,7 +282,7 @@ Az ekvivalens szabályok
 a \emph{rules\_eqv.rules\_simple} modulban,
 a nem ekvivalens szabályok pedig
 a \emph{rules\_neqv.rules\_simple} modulban
-találhatók.
+találhatóak.
 
 Az \emph{In-place} szabályokban a \emph{change} metódus feladata a node átalakítása
 és az átalakított node visszaadása.
@@ -692,7 +687,42 @@ A különböző szabályok fajtáit a \ref{fig:ForRules}. ábrán látható oszt
 
 \subsection{API az átalakítások alkalmazásához}
 
-TODO
+Az átalakításokat a \emph{transformation} modul segítségével alkalmazhatjuk.
+A modul célja egy olyan API létrehozása amivel könnyen átalakíthatunk kódokat vagy kódok AST-jét.
+Az API implementálásához az absztrakt gyár (\emph{Abstract factory}) és az építő (\emph{Builder})
+tervezési mintákat használtam fel.
+
+Ahogy azt az előző fejezetekben részleteztem
+egy szabály alkalmazásához két objektumot kell létrehozni:
+a szabályt és az annak megfelelő átalakító osztályt.
+Az absztrakt gyár az átalakító osztályok és szabályok példányosításában segít.
+
+Az absztrakt gyár mintát a \emph{create\_rule} függvény implementálja.
+A függvény a szabálytípusok átalakító osztályait állítja párba a szabályokkal.
+Egy szabálynév alapján a \emph{create\_rule} létrehozza
+a szabálynak megfelelő átalakító osztály példányát.
+Ha a megadott nevű szabály nem létezik, akkor \emph{ValueError} exceptiont dob.
+
+Egy AST-t az átalakítás során gyakran több átalakító osztállyal is be szeretnénk járni.
+Például ha két szabályt szeretnénk alkalmazni, akkor az AST-t kétszer kell bejárni.
+A többszörös bejárások elvégzésében az építő tervezési mintát megvalósító
+\emph{TransformationBuilder} osztály segít.
+
+A \emph{TransformationBuilder} osztály segítségével
+létrehozhatjuk átalakítók listáját, amivel egy AST-n több egymás utáni átalakítást
+(például szabályokat) hajthatunk végre.
+Ehhez definiáltam a \emph{Transformer} interfészt, amit minden átalakítónak
+implementálnia kell.
+A \emph{Transformer} interfészben csak egy metódus található, a \emph{transform\_ast},
+ami az AST bejárását és átalakítását végzi.
+Ezt a metódust például a szabályok átalakító osztályai is implementálják.
+
+Az is gyakran előfordul, hogy nem az eredeti AST-t akarjuk átalakítani, hanem annak egy másolatát,
+erre a célra a \emph{CopyTransformer} osztályt használhatjuk.
+
+A \emph{CopyTransformer} osztályt egy AST-t alapján példányosíthatjuk.
+A megadott AST-t a \emph{CopyTransformer} lemásolja a \emph{deepcopy} segítségével.
+Az átalakításokat már a másolaton végzi a egy \emph{TransformationBuilder}-t felhasználva.
 
 \pagebreak
 
@@ -925,8 +955,9 @@ segítségével.
 \section{Modulok}
 \label{sec:modules}
 
-A csomagok nem tartalmaznak "futtatható" fájlokat,
-a belépési pontok külön modulokba vannak szervezve.
+A csomagok a \emph{tests} csomagon kívül nem tartalmaznak futtatásra szánt fájlokat.
+A belépési pontok és segédfüggvények a \ref{tab:modules}. táblázatban
+látható modulokba vannak szervezve.
 
 \begin{table}[H]
 	\centering
@@ -947,7 +978,10 @@ a belépési pontok külön modulokba vannak szervezve.
 	\label{tab:modules}
 \end{table}
 
-TODO
+A GUI alkalmazást a \emph{lanuch} modul main függvénye példányosítja.
+Az adathalmazt generáló program implementációja a \emph{persistor} modulban található.
+A \emph{tools} és \emph{utils} modulokban pedig a forráskódban használt
+segédfüggvények definíciói találhatóak.
 
 \pagebreak
 

@@ -1,19 +1,18 @@
 \chapter{Bevezetés}
 \label{ch:intro}
 
-Szakdolgozatom témája Python forráskódok átalakítása és ezen átalakítások szemléltetése.
+Szakdolgozatom témája Python forráskódok átalakítása, és ezen átalakítások szemléltetése.
 A motiváció az átalakítások mögött egy olyan adathalmaz generálása amiben ekvivalens és nem
 ekvivalens 
 forráskód-párok egyaránt szerepelnek. Egy ilyen adathalmazt felhasználhatunk egy mélytanuló
 neuronháló tanítására,
 ami forráskód-párok ekvivalenciáját dönti el.
 
-Az ekvivalencia eldöntése fontos feladat, mivel egyre több, kódokat gépi tanulással refaktoráló,
+Az ekvivalencia eldöntése fontos feladat, mivel egyre több, kódokat gépi tanulással refaktoráló
 eszköz létezik.
 Ezek az eszközök egy kódot változtatva sokszor a kód jelentését is megváltoztatják.
 Egy ekivalenciát eldöntő neuronháló képes lenne kiszűrni az ilyen eszközök által generált
 rossz eredményeket, javítva az eszközök hatékonyságán.
-
 Tehát ekvivalens és nem ekvivalens kódokat generálva felépíthetünk egy adathalmazt, ami
 ekvivalenciával felcímkézett kódpárokat tartalmaz, és alkalmas egy fent leírt neuronháló
 tanítására.
@@ -22,29 +21,31 @@ Az általam implementált átalakítások absztrakt szintaxisfák (AST-k) módos
 Egy forráskód fordítása alatt a szemantikus elemző előállítja a kód AST-jét,
 ami a kódot egy fa adatstruktúrával reprezentálja.
 Az AST-nek a szemantikus elemzésben van szerepe,
-de használhatjuk kódok átalakítására is, mivel vissza lehet alakítáni forráskóddá.
+de használhatjuk kódok átalakítására is, mivel visszaakítható forráskóddá.
 
 Az általam megvalósított átalakítások a Python \emph{ast} modult \cite{pythonAST} használják,
-ami része a Python standard könyvtárának.
+amely része a Python standard könyvtárának.
+
+\pagebreak
 
 Az átalakításokat szabályok végzik. Átalakításkor 
 a Python kódból létrehozott AST-n végrehajthatunk egy szabályt.
-A szabály megváltoztatja az AST-t, amit ha visszaalakítunk kóddá
+A szabály megváltoztatja az AST-t, amit ha visszaalakítunk kóddá,
 egy megváltozott Python kódot kapunk.
 
 A szakdolgozatomban ekvivalens és nem ekvivalens szabályokat is definiálok.
 Egy szabály akkor tekinthető ekvivalensnek, ha a kód szemantikáját nem változtatja meg.
 Például a Python-ban is teljesül a valós számok körében a szorzás kommutatív tulajdonsága.
-Tehát ha egy Python kódban két szám szorzásánál a bal és jobb operandust megcseréljük,
+Tehát, ha egy Python kódban két szám szorzásánál a bal és jobb operandust megcseréljük,
 akkor a szorzás eredménye nem változik, vagyis ez az átalakítás ekvivalens.
-Ez a példa természetesen nagyon egyszerű, a szakdolgozatomban összetettebb átalakításokra is
-adok példát.
+Ez a példa természetesen nagyon egyszerű, a szakdolgozatomban összetettebb átalakítások
+is szerepelnek.
 
-Az adathalmazban az ekvivalens kódok generálásához saját szabályok mellett,
+Az adathalmazban az ekvivalens kódok generálásához saját szabályok mellett
 a \emph{ruff} Python linter és formatter szabályait is felhasználtam.
 A \emph{ruff} már létező Python lintereket implementál Rust programozási nyelven,
 így sok más Python refaktoráló eszköz szabályait is képes elvégezni,
-amik tökéletesek az általam implementált szabályok kiegészítésére.
+amlyek tökéletesek az általam implementált szabályok kiegészítésére.
 
 A szakdolgozatom következő fejezeteiben az adathalmaz generálására és az átalakítások
 szemléltetésére alkalmas szoftver használatát és működését részletezem.

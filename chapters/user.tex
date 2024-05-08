@@ -1,16 +1,17 @@
 \chapter{Felhasználói dokumentáció}
 \label{ch:user}
 
-A szoftver két felhasználói felülettel rendelkezik.
+Az általam fejlesztett szoftver két felhasználói felülettel rendelkezik.
 Az egyik egy parancssoros (CLI) program az adathalmaz generálásához,
-a másik egy grafikus (GUI) alkalmazás az átalakítások szemléltetéséhez és az adathalmaz böngészéséhez.
+a másik egy grafikus (GUI) alkalmazás az átalakítások szemléltetéséhez,
+és az adathalmaz böngészéséhez.
 Mindkét alkalmazás felületének nyelve angol.
 
 \section{Futtatási környezet}
 
 A szoftver egy Python 3.10-es vagy újabb verziójú Python interpreterrel futtatható.
-Futtatás előtt a szoftver a függőségeit installálni kell a \emph{pip} csomagkezelővel.
-Ezt a legegyszerűbben a szoftver forráskódjának könyvtárból tehetjük,
+Futtatás előtt a szoftver függőségeit installálni kell a \emph{pip} csomagkezelővel.
+Ezt a legegyszerűbben a szoftver forráskódjának könyvtárából tehetjük meg,
 a következő parancs kiadásával:
 
 \begin{lstlisting}[language=bash, numbers=none]
@@ -19,18 +20,18 @@ a következő parancs kiadásával:
 
 \section{Adatbázis beállítása}
 
-Az adathalmaz generálásához szüksége van egy \emph{mongodb} adatbázis kliensre \cite{installMongodb}.
-Az adatbázis kiszűri a kódpárok generálása közben a duplikált kódokat
+Az adathalmaz generálásához szükség van egy \emph{mongodb} adatbázis kliensre \cite{installMongodb}.
+Az adatbázis kiszűri a kódpárok generálása közben a duplikált kódokat,
 és az adatok lekérdezését is megkönnyíti.
 
-Az adatbázis elérést a forrás könyvtárában a \emph{config/default.ini} útvonal alatt található
+Az adatbázis elérését a forrás könyvtárában a \emph{config/default.ini} útvonal alatt található
 konfigfájlban lehet beállítani.
 Egy adatbázist három paraméter határoz meg: \emph{host}, \emph{port}, \emph{database} (az adatbázis neve).
 Ha szükséges a konfigfájl alapértékeit átírhatjuk.
 
 \section{Adathalmazt generáló CLI}
 
-Ezzel a CLI alkalmazással van lehetőségünk az adathalmaz generálására egy
+A szoftver CLI alkalmazásával van lehetőségünk az adathalmaz generálására egy
 adott csv fájlban található kódokból vagy egy könyvtárban taláható forrásfájlokból.
 Adathalmazt a következő paranccsal generálhatunk:
 
@@ -50,11 +51,11 @@ A parancs paraméterei a következők:
 	\item \emph{path} - az adatok forrásának elérési útvonala
 \end{enumerate}
 
-Ha megadtuk a parancsot a program megpróbálja a forráskódok olvasását,
-ha az input nem megfelelő leáll.
+Ha megadtuk a parancsot, a program megpróbálja a forráskódok olvasását,
+ha az input nem megfelelő akkor leáll.
 
-Futás közben a program a kiírja az éppen feldolgozott forráskóddal kapcsolatos információkat,
-például a kódon végzett átalakítások számát és azt, hogy el tudta-e menteni az átalakítások eredményeit.
+Futás közben a program kiírja az éppen feldolgozott forráskóddal kapcsolatos információkat,
+például a kódon végzett átalakítások számát, és azt, hogy el tudta-e menteni az átalakítások eredményeit.
 
 \begin{figure}[H]
 	\centering
@@ -62,15 +63,15 @@ például a kódon végzett átalakítások számát és azt, hogy el tudta-e me
 	\caption{A CLI alkalmazás futás közben}
 \end{figure}
 
-Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat leáll.
-Miután a program leállt a forráskód-párok már az adatbázisban vannak.
+Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat, leáll.
+Amikor a program megállt, a forráskód-párok már az adatbázisban vannak.
 
 A \emph{mongoexport} eszköz segítségével
 az adatbázisból a forráskód-párokat egy csv fájlba exportálhatjuk.
 
 \section{Átalakításokat szemléltető GUI}
 
-Ez a GUI alkamazás szemlélteti az átalakításokat.
+A szoftver GUI alkamazása szemlélteti az átalakításokat.
 Kipróbálhatunk vele egy vagy több átalakító szabályt,
 vizualizálhatjuk kódok absztrakt szintaxis fáját,
 és az adatbázisba bekerült átalakítások eredményét is megnézhetjük.
@@ -86,7 +87,8 @@ Az alkalmazás a forrás könyvtárából indítható a következő paranccsal:
 A parancs kiadása után felugró ablakban beállíhatjuk az adatbázis kapcsolathoz szükséges paramétereket:
 a \emph{host}, \emph{port} illetve \emph{database} értékeit.
 A \emph{Connect} gombra kattintva az alkalmazás adatbáziseléréssel indul,
-ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud, különben adatbáziselérés nélkül.
+ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud, különben adatbáziselérés nélkül
+fog elindul.
 Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmazást.
 
 \begin{figure}[H]
@@ -97,7 +99,7 @@ Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmaz
 
 \subsection{Alkalmazás felülete}
 
-Az alkalmazás felülete funkciók szerint két fő nézetre osztható,
+Az GUI alkalmazás felülete funkciók szerint két fő nézetre osztható,
 a refaktoráló és az adatbázis-böngésző nézetre.
 A menü gombjai és az állapotsor szövegei a két fő nézeten kívül helyezkednek el.
 
@@ -123,7 +125,7 @@ Az átalakítás előtt a begépelt vagy betöltött forráskódból létre kell
 az elemező (parser) futtatásával,
 ezt a \emph{Parse Source AST} gombbal tehetjük meg. Ha a megadott forráskódban szintaxis hiba található, 
 vagy valami egyéb okból kifolyólag nem elemezhető, akkor az alkalmazás ezt jelzi egy felugró 
-párbeszéd-ablakkal. Akkor is jelez ha parse-olás nélkül klikkelünk az átalakító gombra.
+párbeszéd-ablakkal. Akkor is jelez, ha parse-olás nélkül klikkelünk az átalakító gombra.
 
 \begin{figure}[H]
 	\centering
@@ -148,25 +150,26 @@ az átalakított fából generált kód pedig a \emph{Transformed Code} readonly
 	\caption{Példa egy átalakítás eredményére}
 \end{figure}
 
-Az alkalmazásba összesen 28 átalakító szabály van, ezek közül 16 ekvivalens és 12 nem ekvivalens
+Az alkalmazás összesen 28 átalakító szabályt használ, ezek közül 16 ekvivalens és 12 nem ekvivalens
 eredményt állít elő.
 Az alkalmazás indításakor az összes ekvivalens szabály ki van választva,
-ez az alkalmazás alapbeállítása amit a \emph{'rules - default'} felirat jelez az állapotsorban.
+ez az alkalmazás alapbeállítása, amit a \emph{'rules - default'} felirat jelez az állapotsorban.
 
 Lehetőségünk van általunk választott szabályok alkalmazására is.
 A szabályok listája a bal oldali panelen látható. Minden szabály előtt van egy checkbox
 amivel a szabályt kiválaszthatjuk. Lehetőségünk van egy vagy több szabály kiválasztására is,
-így könnyen tesztelhetjük egy szabály működését is.
-Ha vannak kiválasztott szabályok azt a \emph{'rules - custom'} felirat jelzi az állapotsorban.
+így könnyen tesztelhetjük egy szabály működését.
+Ha vannak kiválasztott szabályok, azt a \emph{'rules - custom'} felirat jelzi az állapotsorban.
 
 Átalakításkor a szabályok a bal oldali panelen látható sorrendben, fentről lefele kerülnek végrehajtásra.
 A panelen a szabályokon kívül található még két checkbox is,
-ezekkel a \emph{ruff} formatter és az átnevező szabályok alkalmazását tudjuk beállítani.
+ezekkel a \emph{ruff} formatter és az átnevező átalakítások alkalmazását tudjuk beállítani.
 
-Miután átalakítottunk egy forráskódot kimenthetjük az átalakítás eredményét az adatbázisba
-(ha van adatbázis kapcsolat).
-Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombra kattintva tehetjük.
-Ha az átalakítást nem lehet elmenteni azt az alkalmazás párbeszéd-ablakban jelzi.
+Miután átalakítottunk egy forráskódot, kimenthetjük az átalakítás eredményét az adatbázisba,
+ha van adatbázis kapcsolat.
+Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombra kattintva
+tehetjük meg.
+Ha az átalakítást nem lehet elmenteni akkor azt az alkalmazás párbeszéd-ablakban jelzi.
 
 \subsection{AST-k vizualizálása fagráffal}
 
@@ -188,13 +191,13 @@ Az alábbi ábrán például a \emph{helloworld} Python kódjának AST-jét lát
 \subsection{Adatbázis-böngésző nézet}
 
 Ebben a nézetben megtekinthetjük az adatbázisba bekerült forráskód-párokat.
-A nézet csak akkor jön létre ha az alkalmazásnak van adatbázis elérése,
-ha nincs azt a nézeten a \emph{"No database connection."} felirat jelzi.
-A nézet feladata a forráskód-párok listázása és a párba állított forráskódok
+A nézet csak akkor jön létre, ha az alkalmazásnak van adatbázis elérése,
+ha nincs, azt a nézeten a \emph{"No database connection."} felirat jelzi.
+A nézet feladata a forráskód-párok listázása, és a párba állított forráskódok
 különbségeinek megjelenítése.
 
 A különbségeket két forráskód között könnyen vizualizálhatjuk egy diffel,
-azaz olyan szövegösszehasonlító programmal, ami szöveg közti a különbségek
+azaz olyan szövegösszehasonlító programmal, ami a szövegek közti a különbségek
 listáját állítja elő.
 A különbségeket a forráskód-párokban ezzel a módszerrel vizualizálom.
 
@@ -204,7 +207,7 @@ A különbségeket a forráskód-párokban ezzel a módszerrel vizualizálom.
 	\caption{Adatbázis-böngésző nézet}
 \end{figure}
 
-A nézet tetején találhatók a diffeket megjelenítő szövegdobozok, ezek alatt
+A nézet tetején találhatóak a diffeket megjelenítő szövegdobozok, ezek alatt
 egy táblázat látható, soraiban az adatbázisba bekerült forráskód-párokkal.
 A táblázat soraiban található adatok sémáját a \ref{tab:schema}. táblázat írja le.
 
@@ -241,11 +244,11 @@ A táblázat soraiban található adatok sémáját a \ref{tab:schema}. tábláz
 	\label{tab:schema}
 \end{table}
 
-Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk
+Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk,
 akkor a diff nézetben megjelennek az eredeti (bal oldali) és az átakított (jobb oldali)
 kód közti különbségek.
 
-A táblázat feletti keresőt használathatjuk a forráskód-párok böngészéséhez.
+A forráskód-párok böngészéséhez a táblázat feletti keresőt használathatjuk.
 A kereső az összes sorban és oszlopban szereplő adatok közt keres.
-Például megkereshetjük, hogy az adatbázisban mely forráskódokon kerültek
-for ciklussal kapcsolatos átalakítások alkalmazásra.
+Például megkereshetjük, hogy az adatbázisban mely forráskódokon kerültek alkalmazásra
+for ciklussal kapcsolatos átalakítások.
