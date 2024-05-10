@@ -719,8 +719,7 @@ Ezt a metódust például a szabályok átalakító osztályai is implementálj�
 
 Az is gyakran előfordul, hogy nem az eredeti AST-t akarjuk átalakítani, hanem annak egy másolatát,
 erre a célra a \emph{CopyTransformer} osztályt használhatjuk.
-
-A \emph{CopyTransformer} osztályt egy AST-t alapján példányosíthatjuk.
+A \emph{CopyTransformer} osztályt egy AST alapján példányosíthatjuk.
 A megadott AST-t a \emph{CopyTransformer} lemásolja a \emph{deepcopy} segítségével.
 Az átalakításokat már a másolaton végzi a egy \emph{TransformationBuilder}-t felhasználva.
 
@@ -786,7 +785,7 @@ A \emph{Code} a forráskódok modellje, a \emph{CodeChange} pedig a forrráskód
 
 A forráskód a duplikátumok kiszűrése miatt rendelkezik saját modellel.
 A duplikált forráskódok szűrése azért szükséges, mert GitHub-on a kódok jelentős része duplikátum
-\cite{gitubDuplication},
+\cite{GitHubDuplication},
 vagyis ha GitHub-ról bányászunk kódokat akkor a generált adathalmaz minőségén javíthatunk,
 a duplikátumok kiszűrésével.
 
@@ -986,6 +985,334 @@ segédfüggvények definíciói találhatóak.
 \pagebreak
 
 \section{Tesztelés}
+
+Az átalakító szabályok tesztelését \emph{unittest} modulban írt egységtesztekkel végzem.
+Az egységtesztek mellett az átalakítások tesztelésére a \emph{QuixBugs}
+benchmarkot \cite{QuixBugs} is felhasználtam.
+A \emph{QuixBugs}-os tesztekkel egyszerre több átalakítást is tesztelhetünk,
+működéséről a \ref{sec:QuixBugs}. szekcióban olvashatunk.
+
+\subsection{Egységtesztek}
+
+Az egységtesztek forráskódját a \emph{tests.unit} csomag \emph{\_\_main\_\_}
+moduljában találjuk. A tesztek futtatásához a modul main függvényét kell meghívni.
+
+A teszteseteket a \emph{unittest.TestCase}-ből származó osztályok reprezentálják.
+Egy tesztesethez több teszt is tartozik, ezek a teszteset osztályának metódusai.
+A teszteseteket és a hozzájuk tartozó teszteket a \ref{tab:unit_tests}. táblázatban láthatjuk.
+
+Egy teszt során előre megadott forráskódokon alkalmazunk szabályokat.
+Egy szabály alkalmazása után megvizsgáljuk, hogy a kapott eredmény egyezik-e
+az elvárt eredménnyel (lásd \ref{tab:unit_tests}. táblázat \emph{Eredmény} oszlopa),
+ha igen, akkor a teszt sikeres.
+
+\lstset{
+	caption={},
+	numbers=none,
+}
+
+\begin{center}
+	\begin{longtable}{ | p{0.25\textwidth} | p{0.45\textwidth} | p{0.2\textwidth} | }
+		\hline
+		\multicolumn{3}{ |c| }{\textbf{Egységtesztek}}
+		\\ \hline
+		
+		\textbf{Teszt} & \textbf{Rövid leírás} & \textbf{Eredmény}
+		\\ \hline \hline
+		\endfirsthead % első oldal fejléce
+		
+		\hline
+		\textbf{Teszt} & \textbf{Rövid leírás} & \textbf{Eredmény}
+		\\ \hline \hline
+		\endhead % többi oldal fejléce
+		
+		\hline
+		\endfoot % többi oldal lábléce
+		
+		\endlastfoot % utolsó oldal lábléce
+		
+		\multicolumn{3}{ |l| }{\textbf{\texttt{TestForRules}} teszteset:}
+		\\ \hline
+		
+		\texttt{\lstinline{test_for_to_dict}}
+		&
+		$ForToDictComprehension$ szabály
+		
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\
+		\hline
+		
+		\texttt{\lstinline{test_for_to_list}}
+		&
+		$ForToListComprehension$ szabály
+		
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_for_to_set}}
+		&
+		$ForToSetComprehension$ szabály
+		
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_for_to_sum}}
+		&
+		$ForToSum$ szabály
+
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_name_count}}
+		&
+		$For$ node-ban található
+
+		$Name$ node-ok számára
+
+		vonatkozó feltétel tesztelése
+		&
+		a feltételnek
+
+		megfelelő kódok
+		átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_control_flow}}
+		&
+		$Assign$ node és $For$ node közötti
+
+		node-okra vonatkozó feltétel
+
+		tesztelése
+		&
+		a feltételnek
+
+		megfelelő kódok
+		átalakulnak
+		\\
+		\hline
+
+		\multicolumn{3}{ |l| }{\textbf{\texttt{TestSimpleRules}} teszteset:}
+		\\ \hline
+
+		\texttt{\lstinline{test_invert_if}}
+		&
+		$InvertIf$ szabály
+
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_single_if}}
+		&
+		$SingleIf$ szabállyal felismert
+
+		$If$ node else ágra vonatkozó
+
+		feltétel tesztelése
+		&
+		a feltételnek
+		
+		megfelelő kódok
+		átalakulnak
+		\\
+		\hline
+
+		\texttt{\lstinline{test_de_morgan}}
+		&
+		$DeMorgan$ szabály
+
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\ \hline
+
+		\texttt{\lstinline{test_better_neg}}
+		&
+		$BetterNegation$ szabály
+
+		alkalmazása átalakítható kódokon
+		&
+		a kódok helyesen átalakulnak
+		\\ \hline
+
+		\texttt{\lstinline{test_double_neg}}
+		&
+		$DoubleNegation$ szabállyal felismert
+		
+		$UnaryOp$ operandusaira vonatkozó
+
+		feltétel tesztelése
+		&
+		a feltételnek
+
+		megfelelő kódok
+		átalakulnak
+		\\ \hline
+
+		\texttt{\lstinline{test_tuple_assign_1}}
+		&
+		$TupleAssign$ szabály
+
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\ \hline
+
+		\texttt{\lstinline{test_tuple_assign_2}}
+		&
+		$TupleAssign$ szabály alkalmazása
+
+		nem megfelelő értékadást tartamazó kódon
+		&
+		nincs átalakítás
+		\\ \hline
+
+		\texttt{\lstinline{test_mult_assign_1}}
+		&
+		$MultipleAssign$ szabály
+
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\ \hline
+
+		\texttt{\lstinline{test_mult_assign_2}}
+		&
+		$MultipleAssign$ szabály alkalmazása
+
+		nem megfelelő értékadást tartamazó kódon
+		&
+		nincs átalakítás
+		\\ \hline \hline
+
+		\multicolumn{3}{ |l| }{\textbf{\texttt{TestProbabilityRules}} teszteset:}
+		\\ \hline
+
+		\texttt{\lstinline{test_commut_mult_1}}
+		&
+		$CommutativeMult$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_commut_mult_2}}
+		&
+		$CommutativeMult$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_commut_mult_3}}
+		&
+		$CommutativeMult$ szabály
+
+		alkalmazása két nem $Constant$ node közti szorzásra
+		&
+		nincs átalakítás
+		\\
+		\hline
+
+		\texttt{\lstinline{test_insert_continue}}
+		&
+		$InsertContinue$ szabály
+	
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_insert_pass}}
+		&
+		$InsertPass$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\ \hline
+
+		\multicolumn{3}{ |l| }{\textbf{\texttt{TestNonEquivalentRules}} teszteset:}
+		\\ \hline
+
+		\texttt{\lstinline{test_negate_if}}
+		&
+		$NeqvNegateIf$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_invert_if}}
+		&
+		$NeqvInvertIf$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_swap_and_or}}
+		&
+		$NeqvSwapAndOr$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_swap_add_sub}}
+		&
+		$NeqvSwapAddSub$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\texttt{\lstinline{test_insert_return}}
+		&
+		$NeqvInsertReturn$ szabály
+		
+		alkalmazása egy átalakítható kódon
+		&
+		a kód helyesen átalakul
+		\\
+		\hline
+
+		\caption{Egységtesztek táblázata}
+		\label{tab:unit_tests}
+	\end{longtable}
+\end{center}
+
+\pagebreak
+
+\subsection{Tesztelés a \emph{QuixBugs} segítségével\label{sec:QuixBugs}}
 
 TODO
 
