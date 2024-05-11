@@ -128,7 +128,7 @@ a felülírt metódusban, különben a rekurzió megáll.
 \emph{NodeVisitor}-ból származtatott osztállyal akkor érdemes bejárást végezni,
 ha mélységi bejárásra van szükségünk a \emph{NodeVisitor} osztály működése miatt.
 
-Amikor egy \emph{NodeVisitor}-ból származatott osztályban a bejárás rekurzív hívása történik,
+Amikor egy \emph{NodeVisitor}-ból származtatott osztályban a bejárás rekurzív hívása történik,
 minden gyerekre a gyerek típusához tartozó visitor metódus kerül meghívásra, ha az létezik.
 Tehát, ha a gyerek típusának visitor metódusát felülírtuk, akkor a gyereket azzal fogja meglátogatni.
 Ha nem írtuk felül, akkor a \emph{NodeVisitor} osztály
@@ -182,7 +182,7 @@ kell az osztályokat.
 Mivel a \emph{NodeTransformer} maga is a \emph{NodeVisitor} osztályból származik,
 a működése nagyon hasonló.
 
-A bejárás szinte ugyanúgy működik, mint a \emph{NodeVisitor}-ban.
+A bejárás szinte ugyanúgy működik mint a \emph{NodeVisitor}-ban.
 Az AST-t itt is a \emph{generic\_visit} vagy \emph{visit\_<node-class>} metódusokkal
 járhatjuk be.
 A különbség az, hogy az éppen meglátogatott node-ot a
@@ -213,9 +213,9 @@ Az átalakításokat végző algoritmusok a \emph{transformers}, \emph{transform
 elemző és változtató osztályokat is.
 
 Az általam definiált átalakítások közül egyedül
-a \emph{transformers\_rename} modulban található
-átnevezéses átalakítások nem használnak szabályokat.
-Minden más átalakítás szabályokra épít.
+a \emph{transformers\_rename} modulban található, átnevezéses,
+átalakítások nem használnak szabályokat.
+Minden más átalakítás szabályokra épül.
 
 \subsection{Szabályok}
 
@@ -242,7 +242,7 @@ Egy szabály önmagában nem képes egy egész AST átalakítására.
 Az átalakítást a \emph{NodeTransformer}-ből származó \emph{RuleTransformer}
 átalakító osztályok végzik egy szabály segítségével a \emph{transform\_ast} metódusban.
 
-A következő alcímek alatt a különböző szabály típusokról és az azokat alkalmazó
+A következő alcímek alatt a két különböző szabály-típusról és az ezeket alkalmazó
 átalakító osztályokról olvashatunk.
 
 \subsection{\emph{In-place} szabályok}
@@ -365,11 +365,6 @@ táblázatokban láthatjuk.
 		& 1.0
 		\\ \hline
 
-		\emph{CommutativeMult}
-		& A szorzások jobb és bal operandusát felcserélő szabály
-		& 0.5
-		\\ \hline
-
 		\emph{SingleIf}
 		& if utasításon belül található if utasítás feltételének hozzáadása a külső if feltételéhez
 		& 1.0
@@ -391,8 +386,13 @@ táblázatokban láthatjuk.
 		\\ \hline
 
 		\emph{BetterNegation}
-		& Negációkat bevivő szabály
+		& Külső negációkat bevivő szabály
 		& 1.0
+		\\ \hline
+
+		\emph{CommutativeMult}
+		& Szorzás jobb és bal operandusát felcserélő szabály
+		& 0.5
 		\\ \hline
 
 		\emph{ShuffleKeywords}
@@ -504,7 +504,7 @@ amikre a $condition$ függvény teljesül
 (feltéve, hogy $bool(condition(x))$ az $xs$ minden $x$ elemére értelmes).
 \end{example}
 
-Az egyik megoldás, ha létrehozzuk egy üres listát,
+Az egyik megoldás, ha létrehozunk egy üres listát,
 majd egy for ciklussal iterálunk az $xs$-en és
 a listához adjuk azokat az elemeket amelyekre a $condition$ függvény
 "truthy" értéket ad vissza.
@@ -573,7 +573,7 @@ A mintaillesztésénél a statement listát tartalmazó node-okra kell mintaille
 ezek a Python absztrakt-szintaxisának megfelelően azok a node-ok,
 amik \emph{body}, \emph{orelse} vagy \emph{finalbody} attribútumokat tartalmaznak.
 
-Az ilyen node-okat a három \texttt{match} utasítással ismerehetjük fel,
+Az ilyen node-okat három \texttt{match} utasítással ismerehetjük fel,
 amik a következő esetekre mintaillesztenek:
 
 \lstinline{AST(body=[_, _, *_])},
@@ -594,7 +594,7 @@ a felismert \emph{Assign} és \emph{For} node-okon.
 Ilyenkor az átalakítást a felismert \emph{Assign} és \emph{For} párokat tartalmazó
 \emph{matches} listához adjuk.
 
-A \emph{For} átalakításokat felismerésének pszeudokódját a
+A \emph{For} átalakítások felismerésének pszeudokódját a
 \ref{alg:forMatchAlgorithm}. algoritmuson láthatjuk.
 
 \begin{algorithm}[H]
@@ -616,9 +616,9 @@ A \emph{For} átalakításokat felismerésének pszeudokódját a
 	\begin{algorithmic}[1]	
 	\State $name$ := $assign$.target.id
 	\For {$statement$ \textbf{in} $satements$}
-		\State $matched$ := self.matcher\_For($statement$, $name$)
-		\If {$matched$ \textbf{is not} None}
-			\State self.matches.append($matched$)
+		\State $matched\_for$ := self.matcher\_For($statement$, $name$)
+		\If {$matched\_for$ \textbf{is not} None}
+			\State self.matches.append(($assign$, $matched\_for$))
 			\State \Return
 		\EndIf
 		\If {set(ids($statement$)) $\cap$ set(ids($assign$)) $\neq \emptyset$}
@@ -633,7 +633,7 @@ akkor a megfelelő \emph{Assign} és \emph{For} node
 párokat a szabály \emph{matches} listájában találhatjuk meg.
 
 A \emph{For} szabályok \emph{change} függvénye először előállítja a \emph{matches} listát.
-Ha a \emph{matches} nem üres akkor az elemeiből létrehozza és visszaadja
+Ha a \emph{matches} nem üres, akkor az elemeiből létrehozza és visszaadja
 a változtatásokat egy listában ami \emph{ReduceFor} példányokat tartalmaz
 (lásd \emph{change} metódus a \ref{fig:ForRule}. ábrán).
 
@@ -648,7 +648,7 @@ Az átalakítások alkalmazásához az átalakító osztálynak kétszer kell be
 Az első bejárással összegyűjtük a lehetséges változtatásokat az AST node-jain.
 A változásokat a \emph{TFor} osztály \emph{results} listájában tároljuk
 (lásd \ref{fig:TFor}. ábra).
-A lista a szabály \emph{change} metódusa által visszaadott
+A lista mindig a szabály \emph{change} metódusa által visszaadott
 \emph{ReduceFor} példányokkal bővül.
 
 Az első bejárás után a lehetséges változtatások már a \emph{results} listában vannak.
@@ -729,7 +729,7 @@ Az átalakításokat már a másolaton végzi a egy \emph{TransformationBuilder}
 
 A \emph{client} csomag feladata az adatbáziskapcsolat és az indexek létrehozása.
 A kliens a \emph{pymongo} könyvtárat használja, implementációja a \emph{Client} osztályban van.
-Ha szoftvernek az adatbázisra van szüksége azt ezen az osztályon keresztül érheti el.
+Ha a szoftvernek az adatbázisra van szüksége azt ezen az osztályon keresztül érheti el.
 Például az adatbázis forráskódokat és forráskód-párokat tartalmazó kollekciói a kliensen
 keresztül elérhetők.
 
@@ -762,7 +762,7 @@ a kódokat és kód-párokat tartalmazó kollekciók lesznek.
 
 A kollekciók akkor is létrejönnek a kliens szintjén ha az adatbázisban még nem szerepelnek.
 Ebben az esetben a kollekció az adatbázisban akkor jön létre ha a kliensen keresztül elmentünk egy dokumentumot.
-A kliens a szükséges indexeket is definiálja.
+A kliens a szükséges indexeket is definiálja az adatbázisban.
 
 \section{A \emph{model} csomag}
 
@@ -774,7 +774,7 @@ A \emph{model} csomag a feladata a forráskód-párok modellezése, három modul
 	\item \emph{stores} - az adattípusokat elmentő modul
 \end{itemize}
 
-A csomagban két adattípust definiálok a \emph{Code} és \emph{CodeChange}.
+A csomagban két adattípust definiálok a \emph{Code} és \emph{CodeChange} típusokat.
 A \emph{Code} a forráskódok modellje, a \emph{CodeChange} pedig a forrráskód-párokat modellezi.
 
 \begin{figure}[H]
@@ -789,18 +789,17 @@ A duplikált forráskódok szűrése azért szükséges, mert GitHub-on a kódok
 vagyis ha GitHub-ról bányászunk kódokat akkor a generált adathalmaz minőségén javíthatunk,
 a duplikátumok kiszűrésével.
 
-A kódok modellje ezért a kód mellett a kód \emph{sha256}-os hash-ét is tárolja.
+A kódok modellje ezért a kód mellett a kód \emph{sha256}-os hashét is tárolja.
 Mielőtt a kódot elmentjük az adatbázisba megnézzük, hogy a hash ütközik-e.
-A hash attribútum indexelve van a kódokat tartalmazó kollekcióban, ez biztosítja a gyors lekérdezést.
-Ha nincs ütközés, akkor a kódot egyből hozzáadhatjuk az adatbázishoz,
-ha vannak ütközések, akkor csak az ütköző kódokat kell összehasonlítani.
+Ha nincs ütközés, akkor a kódot egyből a kollekcióhoz adhatjuk,
+különben csak az ütköző kódokat kell összehasonlítani a duplikátumok kiszűréséhez.
+A hash attribútuma indexelve van a kódokat tartalmazó kollekcióban,
+ez biztosítja a gyors lekérdezést.
 
 A duplikátumok kiszűrését a \emph{CodeStore} osztály \emph{save\_one} metódusa végzi,
-a \emph{CodeChangeStore} osztály segítségével pedig a kód-párokat tartalmazó kollekcióba
-szúrhatunk be dokumentumokat.
+a szűrés opcionális, tehát duplikátumokat tartalmazó adathamazt is generálhatunk.
+A \emph{CodeChangeStore} osztály segítségével a kódpárokat menthetjük el a megfelelő kollekcióba.
 
-A \emph{CodeStore.save\_one} metódusában a duplikátumok szűrése opcionális,
-tehát duplikátumoktól mentes kódokból is generálhatunk adathamlazt ha szeretnénk.
 
 \section{Az \emph{app} csomag}
 
