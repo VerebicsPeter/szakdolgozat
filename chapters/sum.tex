@@ -1,4 +1,23 @@
 \chapter{Összegzés}
 \label{ch:sum}
 
-TODO
+Szakdolgozatomban egy Python kódok átalakítására alkalmas szoftvert mutattam be.
+Az átalakításokat végző szoftver segítségével GitHub-ról bányászott kódokból generáltam
+ekvivalens és nem ekvivalens forráskód-párokat tartalmazó adathalmazt.
+Az adathalmazt egy forráskód-pár ekvivalenciáját eldöntő mélytanuló neuronháló tanítására használhatjuk.
+
+Az átalakítások szemléltetésére grafikus felhasználói felületű desktop alkalmazást is készítettem,
+amivel a felhasználó kipróbálhatja az átalakításokat.
+
+A szoftver forráskódja többnyire objektum orientált,
+a megvalósítás során a bővíthetőségre törekedtem.
+A jövőben a szoftvert több rétegét is érdemes lehet bővíteni,
+például a meglévő interfészeket használva új átalakításokat adhatunk a szoftverhez és
+a GUI alkalmazás nézeteit is könnyen lecserélhetjük az MVC architektúrának köszönhetően.
+
+Érdemes lehet változtatni az adathalmaz generálásán is. 
+A szabály alapú AST-szintű átalakítások nem tudnak nagy szintaktikai változtatásokat végrehajtani,
+így a bemeneti és az átalakított kódok közötti különbség sokszor kicsi.
+Ezért a neuronhálót tanító adathalmazt érdemes lehet kiegészíteni egy létező,
+szemantikusan ekvivalens, de szintaktikailag különböző kódokat 
+tartalmazó adathalmazzal és az azon végzett átalakításokkal (pl. project-codenet).

@@ -43,8 +43,8 @@ A modulokról a \ref{sec:modules}. szekcióban olvashatunk.
 \section{A \emph{transformations} csomag}
 
 Ebben a szekcióban ismertetem a \emph{transformations} csomagot.
-A szekcióban az átalakításokhoz használt \emph{ast} modult és
-az általam implementált átalakítások működését részletezem.
+Bemutatom az átalakításokhoz használt \emph{ast} modult és
+az általam implementált átalakítások működését is részletezem.
 
 \subsection{Az \emph{ast} modul}
 
@@ -52,13 +52,13 @@ Az átalakításokat a Python \emph{ast} moduljával valósítottam meg.
 Az \emph{ast} modul a Python standard könyvárában alapból megtalálható, 
 célja az AST létrehozása a Python absztrakt-nyelvtanának alapján.
 
-A Python absztrakt-nyelvtana a nyelv szintaxisát definiáló környezetfüggetlen nyelvtan,
-leírását az \emph{ast} modul dokumentációjának \cite{pythonAST} elején találhatjuk.
+A Python absztrakt-nyelvtana a nyelv szintaxisát leíró környezetfüggetlen nyelvtan,
+definícióját az \emph{ast} modul dokumentációjának \cite{pythonAST} elején találjuk.
 
-Az absztrakt-nyelvtan leírásában az AST csúcsainak (node-jainak) típusát az
+Az absztrakt-nyelvtan definíciójában az AST csúcsainak (node-jainak) típusát az
 \emph{ast.AST}-ből származó osztályok határozzák meg,
 ezekről szintén a dokumentáció elején, a \emph{Node classes} cím alatt olvashatunk.
-Egy AST-re tehát általánosan az \emph{ast.AST} osztállyal lehet hivatkozni.
+Egy AST-re tehát általánosan az \emph{ast.AST} osztállyal hivatkozhatunk.
 
 Egy Python forráskód AST-jét az \emph{ast.parse} függvénnyel hozhatjuk létre.
 Az \emph{ast.parse} ekvivalens a Python beépített
@@ -76,7 +76,13 @@ az AST bejárását a \emph{NodeVisitor} osztállyal,
 az AST átalakítását pedig a \emph{NodeTransformer} osztállyal
 végzem.
 
-Az átalakított AST-ből a kód generálására a \emph{ast.unparse} függvényt használom.
+Az átalakított AST-ből a kód generálására az \emph{ast.unparse} függvényt használom.
+Fontos megjegyezni, hogy az \emph{unparse} függvénnyel generált kód nem garantáltan
+helyes szemantikus szinten.
+
+Az általam implementált átalakítások az egyszerűség kedvéért feltételezik a bemeneti
+kódok szemantikus helyességét.
+
 
 \subsubsection{A \emph{NodeVisitor} osztály}
 
@@ -168,9 +174,6 @@ Ez a függvény egy node valamilyen tulajdonságát határozza meg,
 vagyis több típusú node-ra is működhet.
 Ezért kell a \emph{generic\_visit}-et használni,
 amivel az összes AST-ben található node-ot meglátogathatjuk.
-
-A \emph{generic\_visit} felüírásával természetesen szélességi bejárást is definiálhatunk,
-viszont szélességi bejárásnál átláthatóbb, ha iteratív megoldást adunk.
 
 \subsubsection{A \emph{NodeTransformer} osztály}
 
@@ -976,10 +979,12 @@ látható modulokba vannak szervezve.
 	\label{tab:modules}
 \end{table}
 
-A GUI alkalmazást a \emph{lanuch} modul main függvénye példányosítja.
-Az adathalmazt generáló program implementációja a \emph{persistor} modulban található.
-A \emph{tools} és \emph{utils} modulokban pedig a forráskódban használt
-segédfüggvények definíciói találhatóak.
+A \emph{lanuch} modul \emph{main} függvénye a GUI alkalmazást példányosítja.
+A \emph{persistor} modulban az adathalmazt generáló CLI program implementációja található.
+
+A \emph{tools} és \emph{utils} modulok segédfüggvények definícióit tartalmazzák,
+a \emph{ruff} lintert alkalmazó függvények például a \emph{tools} modulban,
+az IO műveleteket végző függvények pedig a \emph{utils} modulban találhatóak.
 
 \pagebreak
 
@@ -988,22 +993,20 @@ segédfüggvények definíciói találhatóak.
 Az átalakító szabályok tesztelését \emph{unittest} modulban írt egységtesztekkel végzem.
 Az egységtesztek mellett az átalakítások tesztelésére a \emph{QuixBugs}
 benchmarkot \cite{QuixBugs} is felhasználtam.
-A \emph{QuixBugs}-os tesztekkel egyszerre több átalakítást is tesztelhetünk,
-működéséről a \ref{sec:QuixBugs}. szekcióban olvashatunk.
+A \emph{QuixBugs}-os tesztek működéséről a \ref{sec:QuixBugs}. szekcióban olvashatunk.
 
 \subsection{Egységtesztek}
 
 Az egységtesztek forráskódját a \emph{tests.unit} csomag \emph{\_\_main\_\_}
-moduljában találjuk. A tesztek futtatásához a modul main függvényét kell meghívni.
+moduljában találjuk. A tesztek futtatásához a modul \emph{main} függvényét kell meghívni.
 
 A teszteseteket a \emph{unittest.TestCase}-ből származó osztályok reprezentálják.
 Egy tesztesethez több teszt is tartozik, ezek a teszteset osztályának metódusai.
 A teszteseteket és a hozzájuk tartozó teszteket a \ref{tab:unit_tests}. táblázatban láthatjuk.
 
-Egy teszt során előre megadott forráskódokon alkalmazunk szabályokat.
-Egy szabály alkalmazása után megvizsgáljuk, hogy a kapott eredmény egyezik-e
-az elvárt eredménnyel (lásd \ref{tab:unit_tests}. táblázat \emph{Eredmény} oszlopa),
-ha igen, akkor a teszt sikeres.
+Egy teszt egy előre megadott forráskódokon alkalmaz egy szabályt.
+Ha a szabály alkalmazása után a kapott eredmény egyezik az elvárt eredménnyel
+(lásd \ref{tab:unit_tests}. táblázat \emph{Eredmény} oszlopa), akkor a teszt sikeres.
 
 \lstset{
 	caption={},
@@ -1313,6 +1316,79 @@ ha igen, akkor a teszt sikeres.
 
 \subsection{Tesztelés a \emph{QuixBugs} segítségével\label{sec:QuixBugs}}
 
-TODO
+
+A \emph{QuixBugs} benchmark eredeti célja a forráskód-javításra képes eszközök tesztelése,
+de a benchmarkot használhatjuk forráskódokon végzett átalakítások tesztelésére is.
+
+A \emph{QuixBugs} benchmark 40 közismert algoritmus Java és Python implementációját tartalmazza.
+Minden algoritmushoz található egy helyes és egy helytelen (bugos) implementáció.
+Az algoritmusokhoz előre megírt tesztek is tartoznak.
+
+A benchmark segítségével egyszerre több átalakító szabályt tesztelek.
+Ehhez az algoritmusok forráskódjait előbb átalakítom, majd futtatom a \emph{QuixBugs}
+teszteseteit az átalakított kódokon.
+
+Az ekvivalens szabályok akkor helyesek, ha nem ronthatnak el egy kódot sem,
+vagyis ha az átalakított kódokon futtatott összes teszt eredménye sikeres.
+Azt is tesztelem, hogy egy nem ekvivalens szabály képes-e elrontani egy kódot,
+vagyis úgy átalakítani a kódot, hogy a hozzá tartozó tesztek elbukjanak.
+
+A benchmarkot használó teszteket a \emph{tests.quix} csomag \emph{\_\_main\_\_} moduljában található
+\emph{main} függvénnyel futtathatjuk.
+A tesztek futtatásához szükségünk van a \emph{QuixBugs} repóra, a \emph{main} függvényt
+a repó elérési útvonalával kell meghívni.
+
+A teszteteket a \emph{test\_transformations} függvény végzi,
+ez a függvénnyel teszteli az általam implementált összes ekvivalens és nem ekvivalens szabályt.
+Az alkalmazott szabályok ekvivalenciáját az \emph{equivalent} paraméterrel lehet megadni.
+
+A \emph{test\_transformations} által végzett teszteknek két fázisa van.
+A függvény először a cache-eli az összes helyes megoldást tartalmazó forrráskódot,
+ezután átalakítja a forráskódokat és futtatja a \emph{QuixBugs} tesztjeit.
+Ha a tesztek lefutottak a cache-elt kódok felülírják az átalakított kódokat,
+így újraindíthatjuk a tesztet.
+
+A \emph{QuixBugs}-os teszteket többször is futtattam,
+a tesztek eredményeit a \ref{tab:quix_tests}. táblázatban láthatjuk.
+A táblázat egy sora egy teszt eredményeit tartalmazza.
+
+Az első két oszlopban a sikeres tesztek és végzett tesztek számának százalékos aránya (\emph{Pass\%})
+szerepel ekvivalens és nem ekvivalens szabályok alkalmazása után.
+Egy tesztet akkor tekintek sikeresnek, ha ekvivalens szabályok esetén a \emph{Pass\%} 100,
+vagyis ha az ekvivalens szabályok nem rontanak el egy kódot sem.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ | m{0.45\textwidth} | m{0.45\textwidth} | }
+		\hline
+		\textbf{Pass\%}
+		
+		\textbf{ekvivalens szabályoknál}
+		&
+		\textbf{Pass\%}
+		
+		\textbf{nem ekvivalens szabályoknál}
+		\\
+		\hline \hline
+		276 / 276 = 100\% & 31 / 276 $\approx$ 11\% \\
+		\hline
+		276 / 276 = 100\% & 23 / 276 $\approx$ 8\% \\
+		\hline
+		276 / 276 = 100\% & 30 / 276 $\approx$ 10\% \\
+		\hline
+		276 / 276 = 100\% & 14 / 276 $\approx$ 5\% \\
+		\hline
+		276 / 276 = 100\% & 26 / 276 $\approx$ 9\% \\
+		\hline
+	\end{tabular}
+	\caption{\emph{QuixBugs} benchmarkot használó tesztek eredményei}
+	\label{tab:quix_tests}
+\end{table}
+
+A \ref{tab:quix_tests}. táblázatban látható, hogy a nem ekvivalens szabályok alkalmazása után
+a kódok nagy része nem megy át a teszteseteken.
+A nem ekvivalens szabályok esetében az eredmények azért különböznek,
+mert a szabályok alkalmazásának alap valószínűsége kisebb mint 1,
+ezért az összes nem ekvivalens szabályt alkalmazó függvény nem determinisztikus.
 
 \pagebreak
