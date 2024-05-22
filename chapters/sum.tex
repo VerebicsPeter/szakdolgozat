@@ -1,24 +1,24 @@
 \chapter{Összegzés}
 \label{ch:sum}
 
-Szakdolgozatomban egy Python kódok átalakítására alkalmas szoftvert mutattam be.
-Az átalakításokat végző szoftver segítségével GitHub-ról bányászott kódokból generáltam
-ekvivalens és nem ekvivalens forráskód-párokat tartalmazó adathalmazt.
-Az adathalmazt egy forráskód-pár ekvivalenciáját eldöntő mélytanuló neuronháló tanítására használhatjuk.
+Szakdolgozatomban egy ekvivalenciát eldöntő neuronháló tanító adathalmazának generálásához fejlesztettem szoftvert.
+Az adathalmaz ekvivalenciával felcímkézett Python forráskód-párokat tartalmaz.
 
-Az átalakítások szemléltetésére grafikus felhasználói felületű desktop alkalmazást is készítettem,
+Az adathalmazban szereplő forráskód-párok generálásához egy olyan AST-szintű
+átalakító szoftvert implementáltam,
+ami képes Python kódokon ekvivalens és nem ekvivalens változtatásokat végezni.
+Az átalakító szoftver segítségével GitHub-ról bányászott kódokból generáltam
+ekvivalens és nem ekvivalens forráskód-párokat tartalmazó adathalmazt.
+
+Az átalakítások szemléltetésére grafikus felhasználói felületű asztali alkalmazást is készítettem,
 amivel a felhasználó kipróbálhatja az átalakításokat.
 
-A szoftver forráskódja többnyire objektum orientált,
-a megvalósítás során a bővíthetőségre törekedtem.
-A jövőben a szoftvert több rétegét is érdemes lehet bővíteni,
-például a meglévő interfészeket használva új átalakításokat adhatunk a szoftverhez és
-a GUI alkalmazás nézeteit is könnyen lecserélhetjük az MVC architektúrának köszönhetően.
+A szoftver forráskódja alapvetően objektum orientált.
+A megvalósítás során a bővíthetőségre törekedtem.
+A meglévő interfészekkel új átalakításokat adhatunk a szoftverhez, az MVC architektúrának köszönhetően pedig a GUI alkalmazás nézeteit is könnyen lecserélhetjük.
 
-Érdemes lehet változtatni az adathalmaz generálásán is. 
-A szabály alapú AST-szintű átalakítások nem tudnak nagy szintaktikai változtatásokat végrehajtani,
-így a bemeneti és az átalakított kódok közötti különbség sokszor kicsi.
-Ezért a neuronhálót tanító adathalmazt érdemes lehet kiegészíteni egy létező,
-szemantikusan ekvivalens, de szintaktikailag különböző kódokat 
-tartalmazó adathalmazzal és az azon végzett átalakításokkal
-(pl. project-codenet adathalmaz \cite{puri2021codenet}).
+A tanító adathalmazt érdemes lehet GitHub-os kódokon kívül más forráskódok alapján generálni.
+Az adathalmaz generálására a project-codenet \cite{puri2021codenet} adathalmaz például egy jó kiinduló pont lehet.
+
+A jövőben a szoftvert több szempontból is bővíteni fogom,különös tekintettel
+az adathalmaz generálására, illetve a neuronháló tanítására és kiértékelésére.

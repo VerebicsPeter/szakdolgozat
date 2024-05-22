@@ -1,3 +1,4 @@
+%ÁLTALÁNOS KOMMENT: ne taglalad annyira a bekezdéseidet, ha nem muszáj. Lehetőleg egy bekezdés legyen legalább 2 mondat, de inkább több. Ez nem csak ide vonatkozik persze
 \chapter{Felhasználói dokumentáció}
 \label{ch:user}
 
@@ -9,7 +10,7 @@ Mindkét alkalmazás felületének nyelve angol.
 
 \section{Futtatási környezet}
 
-A szoftver egy Python 3.10-es vagy újabb verziójú Python interpreterrel futtatható.
+A szoftver egy Python 3.10-es vagy újabb verziójú Python értelmezővel futtatható.
 Futtatás előtt a szoftver függőségeit installálni kell a \emph{pip} csomagkezelővel.
 Ezt a legegyszerűbben a szoftver forráskódjának könyvtárából tehetjük meg,
 a következő parancs kiadásával:
@@ -51,10 +52,9 @@ A parancs paraméterei a következők:
 	\item \emph{path} - az adatok forrásának elérési útvonala
 \end{enumerate}
 
-Ha megadtuk a parancsot, a program megpróbálja a forráskódok olvasását,
-ha az input nem megfelelő akkor leáll.
-
-Futás közben a program kiírja az éppen feldolgozott forráskóddal kapcsolatos információkat,
+Ha megadtuk a \lstinline{peristor} parancsot, a program megpróbálja a forráskódok olvasását,
+ha az input nem megfelelő, akkor leáll.
+Futtatás közben a program kiírja az éppen feldolgozott forráskóddal kapcsolatos információkat,
 például a kódon végzett átalakítások számát, és azt, hogy el tudta-e menteni az átalakítások eredményeit.
 
 \begin{figure}[H]
@@ -64,10 +64,9 @@ például a kódon végzett átalakítások számát, és azt, hogy el tudta-e m
 \end{figure}
 
 Ha a program végigolvasta a csv fájlt vagy a könyvtárban található forrásfájlokat, leáll.
-Amikor a program megállt, a forráskód-párok már az adatbázisban vannak.
-
-A \emph{mongoexport} eszköz segítségével
-az adatbázisból a forráskód-párokat egy csv fájlba exportálhatjuk.
+Amikor a program megállt, a forráskód-párok már az adatbázisban vannak,
+a \emph{mongoexport} eszköz segítségével az adatbázisból a forráskód-párokat
+egy csv fájlba exportálhatjuk.
 
 \section{Átalakításokat szemléltető GUI}
 
@@ -84,36 +83,34 @@ Az alkalmazás a forrás könyvtárából indítható a következő paranccsal:
 	$ python -m source
 \end{lstlisting}
 
-A parancs kiadása után felugró ablakban beállíhatjuk az adatbázis kapcsolathoz szükséges paramétereket:
-a \emph{host}, \emph{port} illetve \emph{database} értékeit.
+A parancs kiadása után a felugró ablakban beállíhatjuk az adatbázis kapcsolathoz szükséges paramétereket:
+a \emph{host}, \emph{port} illetve \emph{database} értékeit (lásd \ref{fig:launcher}. ábra).
 A \emph{Connect} gombra kattintva az alkalmazás adatbáziseléréssel indul,
-ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud, különben adatbáziselérés nélkül
-fog elindulni.
+ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud,
+különben adatbáziselérés nélkül fog elindulni.
 Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmazást.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/screenshots/launcher.png}
-	\caption{Az alkalmazást indító ablak}
+	\caption{\label{fig:launcher}Az alkalmazást indító ablak}
 \end{figure}
 
 \subsection{Alkalmazás felülete}
 
-Az GUI alkalmazás felülete funkciók szerint két fő nézetre osztható,
-a refaktoráló és az adatbázis-böngésző nézetre.
+Az GUI alkalmazás felülete funkciók szerint két fő nézetre osztható, a refaktoráló és az adatbázis-böngésző nézetre.
 A menü gombjai és az állapotsor szövegei a két fő nézeten kívül helyezkednek el.
 
 A refaktoráló nézetben (\emph{Refactor} tab) egy kódon
 ekvivalensen és nem ekvivalensen átalakító szabályokat próbálhatunk ki, és elmenthetjük
 a szabályok által végzett átalakítások eredményeit.
-
 Az adatbázis-böngésző (\emph{Database} tab) nézetben az adatbázisba bekerült kódpárokat tekinthetjük meg.
 
 \subsection{Refaktoráló nézet}
 
 Indítás után a felhasználót a refaktoráló nézet fogadja.
 Egy Python forráskód átalakításához a kódot begépelhetjük a \emph{Source Code} szöveges input mezőbe,
-vagy egy \emph{.py} fájlból is betölthetjük a menüben látható \emph{Open File} gombra kattintva.
+vagy egy \emph{.py} kiterjesztésű fájlból is betölthetjük a menüben látható \emph{Open File} gombra kattintva.
 
 \begin{figure}[H]
 	\centering
@@ -137,11 +134,12 @@ párbeszéd-ablakkal. Akkor is jelez, ha parse-olás nélkül klikkelünk az át
 	\caption{Hibákat jelző párbeszéd-ablakok}
 \end{figure}
 
-Sikeres elemzés után az AST felépítését a \emph{Source AST} fa-nézeten láthatjuk, 
-az első oszlopban a csúcs típusa, a második oszlopban a csúcs szintaxis fájából generált kód látható. 
+Sikeres elemzés után az AST felépítését a \emph{Source AST} fa nézeten láthatjuk, 
+az első oszlopban a csúcs típusa, a második oszlopban a csúcs szintaxis fájából %ez nem 1 szó? nem tudom...
+generált kód látható. 
 
 Elemzés után a fát átalakíthatjuk a \emph{Transform AST} gombra kattintva, 
-ekkor az átalakított fa megjelenik a bal oldali \emph{Transformed AST} fa-nézeten,
+ekkor az átalakított fa megjelenik a bal oldali \emph{Transformed AST} fa nézeten,
 az átalakított fából generált kód pedig a \emph{Transformed Code} readonly szövegdobozban.
 
 \begin{figure}[H]
@@ -169,23 +167,22 @@ Miután átalakítottunk egy forráskódot, kimenthetjük az átalakítás eredm
 ha van adatbázis kapcsolat.
 Ezt a refaktoráló nézet bal alsó sarkában elhelyezkedő \emph{'Save Change'} gombra kattintva
 tehetjük meg.
-Ha az átalakítást nem lehet elmenteni akkor azt az alkalmazás párbeszéd-ablakban jelzi.
+Ha az átalakítást adatbázis kapcsolat hiánya miatt nem lehet elmenteni,
+akkor azt az alkalmazás párbeszéd-ablakban jelzi.
 
-\subsection{AST-k vizualizálása fagráffal}
+\subsection{AST-k vizualizálása}
 
-Az alkalmazás fagráfként is tud AST-ket vizualizálni.
-Az általunk megadott vagy átalakított kód AST-jének fagráfját a menüben látható
-\emph{Show AST} lenyíló menügombbal vizualizálhatjuk.
-A gombra klikkelve két opció közül választhatunk:
-a \emph{Source} gomb az általunk megadott kód, a \emph{Transformed} gomb pedig az átalakított kód
-AST-jét vizualizálja, ha ezek léteznek.
-Az alkalmazás az elkészült fagráf ábráját egy felugró ablakban nyitja meg.
-Az alábbi ábrán például a \emph{helloworld} Python kódjának AST-jét láthatjuk:
+Az alkalmazással vizualizálhatjuk az általunk megadott vagy az átalakított kód AST-jét.
+Az AST-k ábráit a \emph{Show AST} lenyíló menügombbal készíthetjük el, a gombra klikkelve két opció közül választhatunk:
+a \emph{Source} az általunk megadott kód, a \emph{Transformed} az átalakított kód AST-jét vizualizálja.
+Az alkalmazás jelzi ha a kiválasztott AST még nem jött létre, különben elkészíti az AST ábráját.
+A kész ábrát egy felugró ablakban nyitja meg.
+A \ref{fig:ast_example}. ábra például az alkalmazással készült, az ábrán a \emph{helloworld} Python kódjának AST-je szerepel:
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\textwidth]{images/figs/ast_graph.eps}
-	\caption{A \emph{helloworld} program AST-je}
+	\caption{\label{fig:ast_example}A \emph{helloworld} program AST-je}
 \end{figure}
 
 \subsection{Adatbázis-böngésző nézet}
@@ -244,7 +241,9 @@ A táblázat soraiban található adatok sémáját a \ref{tab:schema}. tábláz
 	\label{tab:schema}
 \end{table}
 
-Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk,
+Ha a táblázat egy sorára, vagyis egy forráskód-párra
+%tippre nem kell kötőjel (akkor kell tudtommal, ha legalább 6 szótag és 3 szó az összetett szó. De nem tudom azóta ez a szabály hogy van...) szóval DIKK (idk (hehe))
+klikkelünk,
 akkor a diff nézetben megjelennek az eredeti (bal oldali) és az átakított (jobb oldali)
 kód közti különbségek.
 

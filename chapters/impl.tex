@@ -1,19 +1,24 @@
 \chapter{Fejlesztői dokumentáció}
 \label{ch:impl}
 
-Ebben a fejezetben az általam létrehozott szoftver működését mutatom be.
+% TODO: spellchecker
+%ozstály ikszdé, spell check lehet nem árt majd
+
+Ebben a fejezetben az általam létrehozott szoftver implementációját mutatom be.
 A szoftver felépítését, a felhasznált tervezési mintákat és
 a fontosabb algoritmusok működését is bemutatom.
 A szoftver forráskódja a jövőben változhat,
 a frissített API dokumentáció ezért a személyes oldalamon is elérhető \cite{apidoc}.
 
+A szoftver forráskódja több csomagba és modulba van szervezve.
+Pythonban modulnak egy \emph{.py} kiterjesztésű forrásfájlt nevezük,
+a csomagok pedig modulokból és alcsomagokból álló könyvtárak.
+
 \section{Csomagok}
 
-A szoftver forráskódja több csomagban és modulban található.
+A bemutatott szoftver forráskódja öt csomagba van szerveze (lásd \ref{tab:packages}. táblázat).
 Minden csomag a szoftver egy jól elkülöníthető rétegét valósítja meg,
-például az alkalmazási réteget vagy az átalakításokért felelő réteget.
-
-A forráskód öt csomagba van szerveze, ezek az alábbi táblázatban láthatóak.
+például a GUI alkalmazás rétegét vagy az átalakításokért felelő réteget.
 
 \begin{table}[H]
 	\centering
@@ -36,13 +41,14 @@ A forráskód öt csomagba van szerveze, ezek az alábbi táblázatban látható
 	\label{tab:packages}
 \end{table}
 
-Az szoftver "futtatható" fájljai és fontosabb függvényei
-a csomagokon kívül, külön modulokban helyezkednek el.
-A modulokról a \ref{sec:modules}. szekcióban olvashatunk.
+Az szoftver "futtatható" fájljai és fontosabb függvényei a csomagokon kívül, külön modulokban helyezkednek el.
+%Az előbbi kommentemben felett kérdést végülis itt magyarázod, szóval ez így okés.
+%Azért bennhagyom, mert egy bíráló fejében is ilyesmik lesznek majd, ezt érdemes úgy kb tudni, és ennek fényében esetleg újragondolni ezt-azt
+A modulokról a \ref{sec:modules}. alfejezetben olvashatunk.
 
-\section{A \emph{transformations} csomag}
+\section{A transformations csomag}
 
-Ebben a szekcióban ismertetem a \emph{transformations} csomagot.
+Ebben az alfejezetben ismertetem a \emph{transformations} csomagot.
 Bemutatom az átalakításokhoz használt \emph{ast} modult és
 az általam implementált átalakítások működését is részletezem.
 
@@ -57,32 +63,25 @@ definícióját az \emph{ast} modul dokumentációjának \cite{pythonAST} elejé
 
 Az absztrakt-nyelvtan definíciójában az AST csúcsainak (node-jainak) típusát az
 \emph{ast.AST}-ből származó osztályok határozzák meg,
-ezekről szintén a dokumentáció elején, a \emph{Node classes} cím alatt olvashatunk.
+ezekről szintén az \emph{ast} modul dokumentációjának elején,
+a \emph{Node classes} cím alatt olvashatunk.
 Egy AST-re tehát általánosan az \emph{ast.AST} osztállyal hivatkozhatunk.
 
-Egy Python forráskód AST-jét az \emph{ast.parse} függvénnyel hozhatjuk létre.
-Az \emph{ast.parse} ekvivalens a Python beépített
-\emph{compile} függvényének \texttt{ast.PyCF\_ONLY\_AST} compiler flaggel való
-meghívásával.
+Egy Python forráskód AST-jét az \emph{ast.parse} függvénnyel hozhatjuk létre,
+ami ekvivalens a Python beépített \emph{compile} függvényének
+\texttt{ast.PyCF\_ONLY\_AST} compiler flaggel való meghívásával.
+Fontos, hogy AST-t csak olyan forráskódból tudunk létrehozni, ami szintaktikailag helyes,
+a szintaktikai hibákat az \emph{ast.parse} a \emph{SyntaxError} kivétellel jelzi.
 
-Fontos, hogy AST-t csak olyan forráskódból tudunk létrehozni, amiben nincs
-szintaxis hiba.
-A szintaxis hibákat az \emph{ast.parse} a \emph{SyntaxError} exceptionnel jelzi.
+Az átalakított AST-ből a kód generálására az \emph{ast.unparse} függvényt használom.
+Az AST-ből való forráskód generálásra egy jó alternatíva lehet az \emph{astor} könyvtár \cite{astor}
+\emph{to\_source} függvénye is.
 
 Az \emph{ast} modulban AST-k bejárására és átalakítására alkalmas
 segédfüggvények és segédosztályok is találhatóak.
 Az általam megvalósított átalakításokban
-az AST bejárását a \emph{NodeVisitor} osztállyal,
-az AST átalakítását pedig a \emph{NodeTransformer} osztállyal
+az AST bejárását a \emph{NodeVisitor} osztállyal, az AST átalakítását pedig a \emph{NodeTransformer} osztállyal
 végzem.
-
-Az átalakított AST-ből a kód generálására az \emph{ast.unparse} függvényt használom.
-Fontos megjegyezni, hogy az \emph{unparse} függvénnyel generált kód nem garantáltan
-helyes szemantikus szinten.
-
-Az általam implementált átalakítások az egyszerűség kedvéért feltételezik a bemeneti
-kódok szemantikus helyességét.
-
 
 \subsubsection{A \emph{NodeVisitor} osztály}
 
@@ -126,10 +125,11 @@ ha az id-je egyezik az \emph{\_id}-vel.
 Ehhez a példához hasonlóan a \emph{NodeVisitor}-ban az összes node típushoz
 létezik \emph{visit\_<node-class>} visitor metódus amit felülírhatunk.
 
-Fontos megjegyezni, hogy amikor felülírjuk a visitor metódust olyan node-típusoknál
-amik tartalmazhatnak magukkal megegyező típusú node-ot (például \emph{For} node),
-akkor az összes node meglátogatásához szükséges a \emph{generic\_visit} hívása
-a felülírt metódusban, különben a rekurzió megáll.
+A visitor metódus felülírásában szükség lehet a \emph{generic\_visit} meghívására.
+Ez akkor szükséges, ha a visitor metódushoz tartozó node típusnak
+lehet saját típusával megegyező gyerek node-ja (például \emph{For} node).
+Ilyen esetben az összes gyerek node meglátogatásához szükséges az explicit rekurzív hívás,
+különben a rekurzió megáll.
 
 \emph{NodeVisitor}-ból származtatott osztállyal akkor érdemes bejárást végezni,
 ha mélységi bejárásra van szükségünk.
@@ -202,7 +202,8 @@ akkor a meglátogatott node a visszaadott node-ra változik az AST-ben
 
 \subsection{Az átalakítások működése}
 
-Egy átalakítás, működése (magas szinten) a következő lépésekből áll:
+Egy átalakítás, működése (magas szinten) % #kékestető #1014m #amúgyezjóakkor
+a következő lépésekből áll:
 
 \begin{enumerate}
 	\item AST létrehozása egy kódból
@@ -222,7 +223,9 @@ Minden más átalakítás szabályokra épül.
 
 \subsection{Szabályok}
 
-Egy szabály az AST egy node-ján vagyis részfáján alkalmazható.
+%akkor node=részfa? ezt gondold végig, hogy mit jelent a node, csúcs, részfa, és hasznád kínosan következetesen ezeket a szavakat (akkor is, ha szóismétlés van)
+%Válasz: yes, mivel bizti az ast.AST-ből származik, de ezt inkább kihagyom innen
+Egy szabály az AST egy node-ján alkalmazható.
 Alkalmazásának két lépése van, amit két, AST-n értelmezett, függvény reprezentál:
 
 \begin{enumerate}
@@ -278,7 +281,7 @@ hogy a \emph{change} metódus ezeket fel tudja használni.
 Ezeknél a szabályoknál a \emph{match} visszatérési értéke \emph{None} típusú,
 ha a mintaillesztés sikertelen.
 Sikeres mintaillesztésnél a \emph{match} az elmentett attribútumokat vagy gyerekeket adja vissza
-egy tuple-ben.
+egy rendezett n-esben.
 
 Ekvivalens és nem ekvivalens \emph{In-place} szabályokat is definiáltam.
 Az ekvivalens szabályok
@@ -483,13 +486,19 @@ táblázatokban láthatjuk.
 	\end{longtable}
 \end{center}
 
+A szabályok alap valószínűségeit az alkalmazott szabályok gyakoriságának alapján állítottam be.
+Az alkalmazott szabályok gyakoriságát 1000 GitHub-ról gyűjtött forráskódon vizsgáltam meg.
+A gyakran alkalmazott szabályoknak kisebb, a kevesebbet alkalmazott szabályoknak nagyobb valószínűséget adtam.
+
+A leggyakoribb szabály például az \emph{InsertPass} volt, 1000 kódon 771-szer lett alkalmazva,
+ezért ennek a szabálynak kisebb valószínűséget adtam meg.
+
 \subsection{\emph{For} szabályok}
 
-A \emph{For} szabályok a \emph{transformations} csomag legösszetettebb szabályai.
-Ezek a szabályok for ciklussal megadott alap programozási tételek megoldásából
-(pl. összegzés vagy kiválogatás), Python specifikus, comprehension kifejezést használó
-megoldásokat állítanak elő.
+A \emph{For} szabályok for ciklussal megadott alap programozási tételek megoldásából,
+comprehension kifejezést használó megoldásokat állítanak elő.
 
+%asszem amúgy list comprehension magyarul listakifejezés <- itt ezt inkább nem használnám, mert félrevezető lehet, a comprehension egy külön node típus a nyelvtanban
 A comprehension egy speciális kifejezés a Python absztrakt-nyelvtanában, ami
 egy iterálható kifejezéstből (iter), egy target-kifejezésből (target)
 és "if" kifejezések listájából (ifs) áll.
@@ -509,8 +518,8 @@ amikre a $condition$ függvény teljesül
 
 Az egyik megoldás, ha létrehozunk egy üres listát,
 majd egy for ciklussal iterálunk az $xs$-en és
-a listához adjuk azokat az elemeket amelyekre a $condition$ függvény
-"truthy" értéket ad vissza.
+a listához adjuk azokat az elemeket amelyekre a $condition$ függvény "truthy" értéket ad vissza.
+A "truthy" értékek olyan literálok vagy objektumok amiket boolean-á alakítva igazat kapunk.
 
 A másik megoldás, ha a listát egy list comprehensionnel adjuk meg,
 ekkor a for ciklus if feltételét a list comprehension végére tesszük.
@@ -549,8 +558,8 @@ rövidebb és általában olvashatóbb is.
 
 A \emph{For} szabályok célja a példához hasonló átalakítások megvalósítása.
 Ekvivalens és nem ekvivalens \emph{For} szabályokat is implementáltam.
-A szabályok egy értékadást és egy for ciklust alakítanak comprehensionös kifejezéssé.
-A szabályok közt vannak list, dict és set comprehensionné alakító szabályok,
+A szabályok egy értékadást és egy for ciklust alakítanak comprehension-ös kifejezéssé.
+A szabályok közt vannak list, dict és set comprehension-né alakító szabályok,
 illetve számok össszegének és feltételes összegének kiszámítására is van egy szabály.
 
 A \emph{For} szabályok a sablonfüggvény (\emph{template method})
@@ -639,15 +648,13 @@ A \emph{For} szabályok \emph{change} függvénye először előállítja a \emp
 Ha a \emph{matches} nem üres, akkor az elemeiből létrehozza és visszaadja
 a változtatásokat egy listában ami \emph{ReduceFor} példányokat tartalmaz
 (lásd \emph{change} metódus a \ref{fig:ForRule}. ábrán).
-
 A \emph{ReduceFor} osztály egy példánya tartalmazza
 a törlendő \emph{Assign} node-ot,
-a generált comprehension node-ot
-és a \emph{For} node-ot, amit helyettesíteni kell a generált node-al.
+a generált comprehension node-ot és
+a \emph{For} node-ot, amit helyettesíteni kell a generált node-al.
 
 A \emph{For} szabályokat a \emph{TFor} átalakító osztály segítségével lehet alkalmazni.
 Az átalakítások alkalmazásához az átalakító osztálynak kétszer kell bejárnia az AST-t.
-
 Az első bejárással összegyűjtük a lehetséges változtatásokat az AST node-jain.
 A változásokat a \emph{TFor} osztály \emph{results} listájában tároljuk
 (lásd \ref{fig:TFor}. ábra).
@@ -667,15 +674,13 @@ A megjelölt \emph{Assign} node-okat töröljük
 
 A \emph{TFor} osztály \emph{transform\_ast} metódusa kétszer hívja
 meg a \emph{visit}-et a paraméterül kapott node-ra.
-A bejárást az ozstály a \emph{generic\_visit} felülírásával végzi.
+A bejárást az osztály a\emph{generic\_visit} felülírásával végzi.
 
 A \emph{transformations} csomagban négy féle \emph{For} szabályt implementáltam.
 Az első három szabály az üres dict, list vagy set -et inicializáló for ciklusokat,
-alakítja dict, list vagy set comprehensionné (a feltételes esetet is vizsgálva).
-
+alakítja dict, list vagy set comprehension-né (a feltételes esetet is vizsgálva).
 A negyedik szabály a nullával inicializált, for ciklus által számolt,
-összeget vagy feltételes összeget alakítja
-egy \emph{sum} builtin függvény hívássá.
+összeget vagy feltételes összeget alakítja egy \emph{sum} beépített függvény hívássá.
 
 Mind a négy fajta \emph{For} szabálynak van ekvivalens és nem ekvivalens változata is.
 A különböző szabályok fajtáit a \ref{fig:ForRules}. ábrán látható osztálydiagrammon láthatjuk.
@@ -704,7 +709,7 @@ Az absztrakt gyár mintát a \emph{create\_rule} függvény implementálja.
 A függvény a szabálytípusok átalakító osztályait állítja párba a szabályokkal.
 Egy szabálynév alapján a \emph{create\_rule} létrehozza
 a szabálynak megfelelő átalakító osztály példányát.
-Ha a megadott nevű szabály nem létezik, akkor \emph{ValueError} exceptiont dob.
+Ha a megadott nevű szabály nem létezik, akkor \emph{ValueError} kivételt dob.
 
 Egy AST-t az átalakítás során gyakran több átalakító osztállyal is be szeretnénk járni.
 Például ha két szabályt szeretnénk alkalmazni, akkor az AST-t kétszer kell bejárni.
@@ -728,11 +733,12 @@ Az átalakításokat már a másolaton végzi a \emph{TransformationBuilder}-t f
 
 \pagebreak
 
-\section{A \emph{client} csomag}
+\section{A client csomag}
 
 A \emph{client} csomag feladata az adatbáziskapcsolat és az indexek létrehozása.
 A kliens a \emph{pymongo} könyvtárat használja, implementációja a \emph{Client} osztályban van.
-Ha a szoftvernek az adatbázisra van szüksége azt ezen az osztályon keresztül érheti el.
+
+A szoftverben az adatbázist a \emph{Client} osztályon keresztül érhetjük el.
 Például az adatbázis forráskódokat és forráskód-párokat tartalmazó kollekciói a kliensen
 keresztül elérhetők.
 
@@ -767,7 +773,7 @@ A kollekciók akkor is létrejönnek a kliens szintjén ha az adatbázisban még
 Ebben az esetben a kollekció az adatbázisban akkor jön létre, ha a kliensen keresztül elmentünk egy dokumentumot.
 A kliens a szükséges indexeket is definiálja az adatbázisban.
 
-\section{A \emph{model} csomag}
+\section{A model csomag}
 \label{sec:model}
 
 A \emph{model} csomag a feladata a forráskód-párok modellezése, három modulból áll:
@@ -789,15 +795,15 @@ Az adatokat modellező osztályok UML diagramjait a \ref{fig:model}. ábrán lá
 \end{figure}
 
 A forráskód a duplikátumok kiszűrése miatt rendelkezik saját modellel.
-A duplikált forráskódok szűrése azért szükséges, mert GitHub-on a kódok jelentős része duplikátum
-\cite{GitHubDuplication},
+A duplikált forráskódok szűrése azért szükséges, mert a GitHub-on található kódok
+jelentős része duplikátum \cite{GitHubDuplication},
 vagyis ha GitHub-ról bányászunk kódokat akkor a generált adathalmaz minőségén javíthatunk,
 a duplikátumok kiszűrésével.
 
 A kódok modellje ezért a kód mellett a kód \emph{sha256}-os hashét is tárolja.
 Mielőtt a kódot elmentjük az adatbázisba megnézzük, hogy a hash ütközik-e.
 
-Ha nincs ütközés, akkor a kódot egyből a kollekcióhoz adhatjuk,
+Ha nincs ütközés, akkor a kódot azonnal a kollekcióhoz adhatjuk,
 különben csak az ütköző kódokat kell összehasonlítani a duplikátumok kiszűréséhez.
 A hash attribútuma indexelve van a kódokat tartalmazó kollekcióban,
 ez biztosítja a gyors lekérdezést.
@@ -805,19 +811,19 @@ ez biztosítja a gyors lekérdezést.
 A \emph{CodeStore} és \emph{CodeChangeStore} osztályokkal lehet a kódokat és kódpárokat
 elmenteni az adatbázisba.
 A duplikátumok szűrését a \emph{CodeStore} osztály \emph{save\_one} metódusa végzi.
-A szűrés opcionális, ha nem szeretnénk szűrést azt a \emph{dupes} paraméterrel állíthatjuk be.
+A szűrés opcionális, ha nem szeretnénk szűrést azt a \emph{dupes} boolean paraméterrel állíthatjuk be.
+Ha a \emph{dupes} igaz akkor megengedjük a duplikátumokat.
 
 
-\section{Az \emph{app} csomag}
+\section{Az app csomag}
 
 Az \emph{app} csomag feladata az átalakításokat szemléltető GUI-s alkalmazás megvalósítása.
-Az alkalmazás architektúrája modell-nézet-kontroller (MVC) szerű.
-Egy nézet rendelkezik egy kontrollerrel és a kontroller pedig egy modellel.
+Az alkalmazás architektúrája modell-nézet-vezérlő (MVC) szerű.
+Egy nézet rendelkezik egy vezérlővel, a vezérlő pedig egy modellel.
 
 A nézet feladata a GUI definiálása és frissítése,
 a modell feladata az adatelérés vagy az alkalmazás állapotának modellezése.
-A kontroller ezt a két réteget köti össze,
-így a nézet nem függ a modelltől és a modell sem a nézettől.
+A vezérlő ezt a két réteget köti össze, így a nézet nem függ a modelltől és a modell sem a nézettől.
 
 Az alkalmazás csomagjainak UML diagramját a \ref{fig:app_packages}. ábrán láthatjuk.
 
@@ -876,7 +882,7 @@ kódot kell-e formatálni és hogy az átnevezéseket végre kell-e hajtani.
 \pagebreak
 
 Az utolsó validált átalakítást a \emph{CodeChange} osztály egy példánya tárolja.
-Ahogy azt az előző szekcióban is említettem ezzel az osztállyal,
+Ahogy azt az előző alfejezetben is említettem ezzel az osztállyal,
 lehet elmenteni átalakításokat az adatbázisba.
 
 A modellt az \emph{AppState} metódusai segítségével változtathatjuk.
@@ -900,15 +906,14 @@ a Python szintaxis kiemelését támogató szövegdoboz
 
 Az applikáció összetettebb nézeteit az \emph{app.views} csomagban definiáltam.
 Ezek a nézetek szintén widgetek,
-de az \emph{app.widgets} widgeteivel ellentétben
-rendelkeznek egy kontrollerel,
+de az \emph{app.widgets} widgeteivel ellentétben rendelkeznek egy vezérlővel,
 amit a modellel való kommunikációhoz használnak
 (az \emph{app.widgets} widgetei nem férnek hozzá a modellekhez).
 
 Az \emph{app.view} widgetei az \emph{app.appbases.View} osztályból származnak.
-A \emph{View} osztály egy \emph{tkinter}-es frame, ami
-a nézethez tartozó kontroller példányával jön létre.
-Az alkalmazásban három ilyen kontrollerrel rendelkező nézet van,
+A \emph{View} osztály egy \emph{tkinter}-es frame, ami a nézethez tartozó 
+vezérlő példányával jön létre.
+Az alkalmazásban három ilyen vezérlővel rendelkező nézet van,
 ezek osztálydiagrammjait a \ref{fig:views}. ábrán láthatjuk.
 
 \begin{figure}[H]
@@ -917,34 +922,34 @@ ezek osztálydiagrammjait a \ref{fig:views}. ábrán láthatjuk.
 	\caption{\label{fig:views}A nézetek osztálydiagrammjai}
 \end{figure}
 
-\subsection{Kontrollerek}
+\subsection{Vezérlők}
 
-A kontrollerek feladata a kommunikáció a modellek és nézetek között.
+A vezérlők feladata a kommunikáció a modellek és nézetek között.
 Ahogy azt a \ref{fig:views}. ábrán láthatjuk csak az alkalmazás
 két fő nézete (\emph{DatabaseTab} és \emph{RefactorTab})
-illetve a menü (\emph{Menu}) rendelkeznek kontrollerrel.
+illetve a menü (\emph{Menu}) rendelkeznek vezérlővel.
 
-Az applikációban két különböző kontroller van.
+Az applikációban két különböző vezérlő van.
 A \emph{DatabaseController} az adatelérési modellekkel,
 a \emph{RefactorController} az alkalmazás állapotmodelljével kommunikál.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{images/uml/controllers.eps}
-	\caption{\label{fig:controllers}A kontrollerek osztálydiagrammjai}
+	\caption{\label{fig:controllers}A vezérlők osztálydiagrammjai}
 \end{figure}
 
 Ha a nézeten olyan GUI esemény, történik aminek az eseménykezelője
 a modell vagy az állapotmodell használatát igényli,
-akkor az eseménykezelő a nézethez tartozó kontroller megfelelő metódusát hívja meg.
+akkor az eseménykezelő a nézethez tartozó vezérlő megfelelő metódusát hívja meg.
 Ha az eseményhez input is tartozik (pl. egy szöveges doboz tartalma) akkor
-azt is továbbítja a kontroller metódusának paraméterként.
+azt is továbbítja a vezérlő metódusának paraméterként.
 
-A kontroller használja a modellt, lekérdezéseket vagy változtatásokat végez rajta,
+A vezérlő használja a modellt, lekérdezéseket vagy változtatásokat végez rajta,
 ha ezek megtörténtek a nézetet direk vagy indirekt módon frissíti.
 Direkt módon frissíti, ha a modelltől kapott adatokat a nézetnek továbbítja,
 ami azokkal frissül.
-Ha a kontroller egy eseményt vált ki a modellben, aminek hatására a nézet frissül,
+Ha a vezérlő egy eseményt vált ki a modellben, aminek hatására a nézet frissül,
 akkor indirekt frissíti.
 Ezt a működést a \ref{fig:MVC}. ábrán láthatjuk.
 
@@ -996,9 +1001,7 @@ az IO műveleteket végző függvények pedig a \emph{utils} modulban találhat�
 \section{Tesztelés}
 
 Az átalakító szabályok tesztelését \emph{unittest} modulban írt egységtesztekkel végzem.
-Az egységtesztek mellett az átalakítások tesztelésére a \emph{QuixBugs}
-benchmarkot \cite{QuixBugs} is felhasználtam.
-A \emph{QuixBugs}-os tesztek működéséről a \ref{sec:QuixBugs}. szekcióban olvashatunk.
+Az egységtesztek mellett az átalakítások tesztelésére a \emph{QuixBugs} benchmarkot \cite{QuixBugs} is felhasználtam.
 
 \subsection{Egységtesztek}
 
@@ -1009,7 +1012,7 @@ A teszteseteket a \emph{unittest.TestCase}-ből származó osztályok reprezent�
 Egy tesztesethez több teszt is tartozik, ezek a teszteset osztályának metódusai.
 A teszteseteket és a hozzájuk tartozó teszteket a \ref{tab:unit_tests}. táblázatban láthatjuk.
 
-Egy teszt egy előre megadott forráskódokon alkalmaz egy szabályt.
+Egy teszt string literálként előre megadott forráskódokon alkalmaz egy szabályt.
 Ha a szabály alkalmazása után a kapott eredmény egyezik az elvárt eredménnyel
 (lásd \ref{tab:unit_tests}. táblázat \emph{Eredmény} oszlopa), akkor a teszt sikeres.
 
@@ -1321,31 +1324,31 @@ Ha a szabály alkalmazása után a kapott eredmény egyezik az elvárt eredménn
 
 \subsection{Tesztelés a \emph{QuixBugs} segítségével\label{sec:QuixBugs}}
 
-
-A \emph{QuixBugs} benchmark eredeti célja a forráskód-javításra képes eszközök tesztelése,
-de a benchmarkot használhatjuk forráskódokon végzett átalakítások tesztelésére is.
-
 A \emph{QuixBugs} benchmark 40 közismert algoritmus Java és Python implementációját tartalmazza.
 Minden algoritmushoz található egy helyes és egy helytelen (bugos) implementáció.
-Az algoritmusokhoz előre megírt tesztek is tartoznak.
+Az algoritmusok helyes implementációihoz tartoznak validáló tesztek is.
+A benchmark eredeti célja a forráskód-javításra képes eszközök tesztelése,
+de a benchmarkot használhatjuk forráskódokon végzett átalakítások tesztelésére is.
 
-A benchmark segítségével egyszerre több átalakító szabályt tesztelek.
-Ehhez az algoritmusok forráskódjait előbb átalakítom, majd futtatom a \emph{QuixBugs}
-teszteseteit az átalakított kódokon.
+A benchmark segítségével az általam implementált összes szabályt tesztelem.
+Ehhez az algoritmusok forráskódjait előbb átalakítom a szabályok alapján,
+majd futtatom a \emph{QuixBugs} teszteseteit az átalakított kódokon.
 
-Az ekvivalens szabályok akkor helyesek, ha nem ronthatnak el egy kódot sem,
-vagyis ha az átalakított kódokon futtatott összes teszt eredménye sikeres.
-Azt is tesztelem, hogy egy nem ekvivalens szabály képes-e elrontani egy kódot,
-vagyis úgy átalakítani a kódot, hogy a hozzá tartozó tesztek elbukjanak.
+Az ekvivalens szabályok helyességét úgy ellenőrzöm,
+hogy az összses ekvivalens szabályt alkalmazom a \emph{QuixBugs} kódjain.
+Az összes ekvivalens szabály által végzett átalakítások nem ronthatnak el egy kódot sem,
+vagyis az átalakított kódokon futtatott összes teszt eredménye sikeres kell legyen.
+Azt is tesztelem, hogy a nem ekvivalens szabályok képesek-e elrontani egy kódot,
+vagyis úgy átalakítani azt, hogy a hozzá tartozó tesztek elbukjanak.
 
 A benchmarkot használó teszteket a \emph{tests.quix} csomag \emph{\_\_main\_\_} moduljában található
 \emph{main} függvénnyel futtathatjuk.
-A tesztek futtatásához szükségünk van a \emph{QuixBugs} repóra, a \emph{main} függvényt
-a repó elérési útvonalával kell meghívni.
+A tesztek futtatásához szükségünk van a \emph{QuixBugs} szoftvertárolóra, % ez a repo elvileg
+a \emph{main} függvényt a szoftvertároló elérési útvonalával kell meghívni.
 
-A teszteteket a \emph{test\_transformations} függvény végzi,
-ez a függvénnyel teszteli az általam implementált összes ekvivalens és nem ekvivalens szabályt.
-Az alkalmazott szabályok ekvivalenciáját az \emph{equivalent} paraméterrel lehet megadni.
+A teszteteket a \emph{test\_transformations} függvény futtatja,
+ez a függvény teszteli az általam implementált összes ekvivalens és nem ekvivalens szabályt.
+Az alkalmazott szabályok ekvivalenciáját az \emph{equivalent} boolean paraméterrel lehet megadni.
 
 A \emph{test\_transformations} által végzett teszteknek két fázisa van.
 A függvény először a cache-eli az összes helyes megoldást tartalmazó forrráskódot,
@@ -1395,5 +1398,8 @@ a kódok nagy része nem megy át a teszteseteken.
 A nem ekvivalens szabályok esetében az eredmények azért különböznek,
 mert a szabályok alkalmazásának alap valószínűsége kisebb mint 1,
 ezért az összes nem ekvivalens szabályt alkalmazó függvény nem determinisztikus.
+
+Fontos megjegyezni, hogy az átalakítás során az nem biztos, hogy az összes ekvivalens szabály alkalmazásra kerül.
+Ezért érdemes lehet a \emph{QuixBugs}-hoz hasonló, de nagyobb terjedelmű benchmarkon is tesztelni az átalakításokat.
 
 \pagebreak
