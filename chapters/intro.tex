@@ -4,7 +4,6 @@
 % TODO: CIKKEK
 
 Szakdolgozatom témája Python forráskódok átalakítása, és ezen átalakítások szemléltetése.
-
 A motiváció az átalakítások mögött egy olyan adathalmaz generálása amiben
 ekvivalenciával felcímkézett forráskód-párok szerepelnek.
 Egy ilyen adathalmazt felhasználhatunk egy mélytanuló
@@ -15,6 +14,11 @@ Ezek az eszközök egy kód refaktorálására adott promt hatására sokszor a 
 ami nem felel meg a refaktorálás definíciójának
 (egy átalakítás akkor refaktorálás, ha szemantikusan ekvivalens az átalakított kóddal).
 
+A forráskód hasonlóság témája egy sokat kutatott terület.
+Ezen belül a forráskódok közti ekvivalencia vagy funkcionális hasonlóságok felismerésére
+gyakran használnak mélytanuláson alapuló módszereket
+\cite{CCLearner,DeepSim,ContextualEmbeddings,ContrastiveCodeRepair}.
+
 Egy ekivalenciát eldöntő neuronháló képes lenne kiszűrni a szemantikusan nem ekvivalens átalakításokat,
 ezzel javítva a gépi tanulást használó refaktoráló eszközök hatékonyságán.
 Tehát ekvivalens és nem ekvivalens kódokat generálva felépíthetünk egy adathalmazt, ami
@@ -24,6 +28,7 @@ tanítására.
 Az általam implementált átalakítások absztrakt szintaxisfák (AST-k) módosításával működnek.
 Egy forráskód fordítása közben a szintaktikus elemző előállítja a kód AST-jét,
 ami a kódot egy fa adatstruktúrával reprezentálja.
+
 Az AST-nek a szemantikus elemzésben van szerepe,
 de használhatjuk kódok átalakítására is, mivel visszaalakítható forráskóddá.
 
@@ -54,4 +59,6 @@ szemléltetésére alkalmas szoftver használatát és működését részleteze
 % TODO
 % Szerintem jó lenne pár cikkre hivatkozni, és így a bibliográfia is nőne.
 % Ilyen stílusban, hogy:
-% "A hasonló vagy ekvivalens működésű forráskódok fellelése, vagy az ekvivalencia megállapítása egy sokat kutatott terület \cite{...}. XY et al. például ... stb.
+% "A hasonló vagy ekvivalens működésű forráskódok fellelése, vagy
+%  az ekvivalencia megállapítása egy sokat kutatott terület \cite{...}.
+%  XY et al. például ... stb."
