@@ -1,9 +1,6 @@
 \chapter{Fejlesztői dokumentáció}
 \label{ch:impl}
 
-% TODO: spellchecker
-%ozstály ikszdé, spell check lehet nem árt majd
-
 Ebben a fejezetben az általam létrehozott szoftver implementációját mutatom be.
 A szoftver felépítését, a felhasznált tervezési mintákat és
 a fontosabb algoritmusok működését is bemutatom.
@@ -11,12 +8,12 @@ A szoftver forráskódja a jövőben változhat,
 a frissített API dokumentáció ezért a személyes oldalamon is elérhető \cite{apidoc}.
 
 A szoftver forráskódja több csomagba és modulba van szervezve.
-Pythonban modulnak egy \emph{.py} kiterjesztésű forrásfájlt nevezük,
+Pythonban modulnak egy \emph{.py} kiterjesztésű forrásfájlt nevezzük,
 a csomagok pedig modulokból és alcsomagokból álló könyvtárak.
 
 \section{Csomagok}
 
-A bemutatott szoftver forráskódja öt csomagba van szerveze (lásd \ref{tab:packages}. táblázat).
+A bemutatott szoftver forráskódja öt csomagba van szervezve (lásd \ref{tab:packages}. táblázat).
 Minden csomag a szoftver egy jól elkülöníthető rétegét valósítja meg,
 például a GUI alkalmazás rétegét vagy az átalakításokért felelő réteget.
 
@@ -41,9 +38,9 @@ például a GUI alkalmazás rétegét vagy az átalakításokért felelő réteg
 	\label{tab:packages}
 \end{table}
 
-Az szoftver "futtatható" fájljai és fontosabb függvényei a csomagokon kívül, külön modulokban helyezkednek el.
 %Az előbbi kommentemben felett kérdést végülis itt magyarázod, szóval ez így okés.
 %Azért bennhagyom, mert egy bíráló fejében is ilyesmik lesznek majd, ezt érdemes úgy kb tudni, és ennek fényében esetleg újragondolni ezt-azt
+Az szoftver "futtatható" fájljai és fontosabb függvényei a csomagokon kívül, külön modulokban helyezkednek el.
 A modulokról a \ref{sec:modules}. alfejezetben olvashatunk.
 
 \section{A transformations csomag}
@@ -118,7 +115,7 @@ A bejárást a \emph{NodeVisitor} osztályból örökölt \emph{visit} metódus 
 lehet elindítani egy AST-re. Ez a bejárás \textbf{mélységi bejárás}.
 
 Bejárás közben a \emph{Name} node-okat a \emph{NodeVisitor} osztály \emph{visit\_Name}
-metdódusának felülírásával látogatjuk meg.
+metódódusának felülírásával látogatjuk meg.
 A meglátogatott \emph{Name} node-ot akkor adjuk a listához,
 ha az id-je egyezik az \emph{\_id}-vel.
 
@@ -161,7 +158,6 @@ Erre a \ref{src:TypeVisitor}. forrráskódban láthatunk példát.
 			if self._node_matcher(node):
 				self._nodes.append(node)
 \end{lstlisting}
-
 
 A \ref{src:TypeVisitor}. forráskódban definiált \emph{TypeVisitor} osztály
 a \ref{src:NameVisitor}. forráskódban definiált \emph{NameVisitor} osztály
@@ -296,7 +292,7 @@ A \emph{change} metódus először mintailleszt a \emph{try\_match} meghívásá
 A \emph{try\_match} visszatérési értéke alapján vagy átalakítja a node-ot,
 vagy egy \emph{None} visszaadásával jelzi, hogy az adott node-ot nem tudja átalakítani.
 
-Minden \emph{SimpleRule} osztályból származó szabály rendelkezik egy valószínüséggel változóval
+Minden \emph{SimpleRule} osztályból származó szabály rendelkezik egy valószínűséggel változóval
 (\emph{probability} a \ref{fig:SimpleRule}. ábrán).
 Erre azért van szükség, mert a nagyon egyszerű szabályokat nem biztos,
 hogy minden node-ra alkalmazni szeretnénk.
@@ -329,7 +325,7 @@ Minden meglátogatott node-ra alkalmazza
 a \emph{rule} példány szintű változóban található szabályt.
 Ha a szabály alkalmazható, akkor a node-ot átalakítja, különben változatlanul hagyja.
 A bejárást a \emph{transform\_ast} indítja.
-A bejárás végén az eredmény a \emph{changed} bool-ban található,
+A bejárás végén az eredmény a \emph{changed} boolean-ben található,
 ami azt jelzi, hogy sikerült-e a szabályt legalább egyszer alkalmazni az AST-n.
 
 Az \emph{In-place} szabályok listáját a \ref{tab:in-place-rules-eqv}. és \ref{tab:in-place-rules-neqv}.
@@ -519,7 +515,7 @@ amikre a $condition$ függvény teljesül
 Az egyik megoldás, ha létrehozunk egy üres listát,
 majd egy for ciklussal iterálunk az $xs$-en és
 a listához adjuk azokat az elemeket amelyekre a $condition$ függvény "truthy" értéket ad vissza.
-A "truthy" értékek olyan literálok vagy objektumok amiket boolean-á alakítva igazat kapunk.
+A "truthy" értékek olyan literálok vagy objektumok amiket boolean-é alakítva igazat kapunk.
 
 A másik megoldás, ha a listát egy list comprehensionnel adjuk meg,
 ekkor a for ciklus if feltételét a list comprehension végére tesszük.
@@ -560,7 +556,7 @@ A \emph{For} szabályok célja a példához hasonló átalakítások megvalósí
 Ekvivalens és nem ekvivalens \emph{For} szabályokat is implementáltam.
 A szabályok egy értékadást és egy for ciklust alakítanak comprehension-ös kifejezéssé.
 A szabályok közt vannak list, dict és set comprehension-né alakító szabályok,
-illetve számok össszegének és feltételes összegének kiszámítására is van egy szabály.
+illetve számok összegének és feltételes összegének kiszámítására is van egy szabály.
 
 A \emph{For} szabályok a sablonfüggvény (\emph{template method})
 tervezési minta segítségével működnek.
@@ -655,7 +651,7 @@ a \emph{For} node-ot, amit helyettesíteni kell a generált node-al.
 
 A \emph{For} szabályokat a \emph{TFor} átalakító osztály segítségével lehet alkalmazni.
 Az átalakítások alkalmazásához az átalakító osztálynak kétszer kell bejárnia az AST-t.
-Az első bejárással összegyűjtük a lehetséges változtatásokat az AST node-jain.
+Az első bejárással összegyűjtjük a lehetséges változtatásokat az AST node-jain.
 A változásokat a \emph{TFor} osztály \emph{results} listájában tároljuk
 (lásd \ref{fig:TFor}. ábra).
 A lista mindig a szabály \emph{change} metódusa által visszaadott
@@ -676,7 +672,7 @@ A \emph{TFor} osztály \emph{transform\_ast} metódusa kétszer hívja
 meg a \emph{visit}-et a paraméterül kapott node-ra.
 A bejárást az osztály a\emph{generic\_visit} felülírásával végzi.
 
-A \emph{transformations} csomagban négy féle \emph{For} szabályt implementáltam.
+A \emph{transformations} csomagban négyféle \emph{For} szabályt implementáltam.
 Az első három szabály az üres dict, list vagy set -et inicializáló for ciklusokat,
 alakítja dict, list vagy set comprehension-né (a feltételes esetet is vizsgálva).
 A negyedik szabály a nullával inicializált, for ciklus által számolt,
@@ -735,7 +731,7 @@ Az átalakításokat már a másolaton végzi a \emph{TransformationBuilder}-t f
 
 \section{A client csomag}
 
-A \emph{client} csomag feladata az adatbáziskapcsolat és az indexek létrehozása.
+A \emph{client} csomag feladata az adatbázis kapcsolat és az indexek létrehozása.
 A kliens a \emph{pymongo} könyvtárat használja, implementációja a \emph{Client} osztályban van.
 
 A szoftverben az adatbázist a \emph{Client} osztályon keresztül érhetjük el.
@@ -760,7 +756,7 @@ a belső állapot egy dict lesz, példányosításnál a belső állapot dict-je
 \end{figure}
 
 Amikor először példányosítunk a \emph{Client}-ből a \emph{client}, \emph{code} és \emph{code\_change}
-attribútumai \emph{None} értékeket vesznek fel (ez a kezdelteges belső állapot).
+attribútumai \emph{None} értékeket vesznek fel (ez a kezdetleges belső állapot).
 
 Ha ezután meghívjuk a \emph{connect\_client} metódust az adatbázis paramétereivel
 és a kapcsolat 10 másodpercen belül létrejön, akkor a kapcsolat sikeres.
@@ -838,7 +834,7 @@ Az alkalmazás csomagjainak UML diagramját a \ref{fig:app_packages}. ábrán l�
 
 Az alkalmazásban kétféle modell különböztethető meg:
 az adatelérési modellek (lásd \ref{sec:model}. szekció),
-és az alkalmzás állapotmodellje, ami az \emph{app.appstate} modul 
+és az alkalmazás állapotmodellje, ami az \emph{app.appstate} modul 
 \emph{AppState} osztályában van definiálva.
 
 Az állapotmodell a megfigyelő (\emph{observer}) tervezési mintát használja a nézetek frissítésére.
@@ -846,7 +842,7 @@ Az \emph{AppState} osztály az \emph{Observable} osztályból származik,
 ezért rendelkezik megfigyelők dict-jével (\emph{observers}).
 A megfigyelők dict-je tartalmazza az esemény-eseménykezelő key-value párokat.
 
-Ha a nézet valamelyik komponenesét az állapotmodell egy változásának hatására szeretnénk frissíteni,
+Ha a nézet valamelyik komponensét az állapotmodell egy változásának hatására szeretnénk frissíteni,
 akkor azt az eseménykezelőt, ami frissíti,
 hozzárendelhetjük az állapotmodell egy eseményéhez az \emph{app.events} modulból.
 
@@ -863,8 +859,8 @@ a frissítéshez szükséges adatokat paraméterként továbbítva.
 	\caption{\label{fig:AppState}Állapotmodell és kapcsolódó osztályok UML diagramjai}
 \end{figure}
 
-Az állapotmodel UML diagramját a \ref{fig:AppState}. ábrán látjhatjuk.
-Az alkalmazás egy állapotát a bemeneti és kimineti AST-k, az ezekből generált kódok,
+Az állapotmodel UML diagramját a \ref{fig:AppState}. ábrán láthatjuk.
+Az alkalmazás egy állapotát a bemeneti és kimeneti AST-k, az ezekből generált kódok,
 az átalakításért felelő szabályok listája, és az utolsó átalakítás írják le.
 
 Az AST-k és a belőlük generált kódok az \emph{AppState} osztály példány szintű változói.
@@ -873,10 +869,10 @@ példányát
 is tartalmazza, ezek rendre az átalakításért felelő szabályokat és az utolsó átalakítást
 tárolják.
 
-Az \emph{AppRules} a szabályok állapotát modelezi, szintén az \emph{Observable}-ből
+Az \emph{AppRules} a szabályok állapotát modellezi, szintén az \emph{Observable}-ből
 származik.
 Ez az osztály tartalmazza a kiválasztott szabályokat a \emph{rules} listában,
-a \emph{format} és \emph{rename} bool-okkal pedig azt tárolja, hogy az átalakított
+a \emph{format} és \emph{rename} boolean-ekkel pedig azt tárolja, hogy az átalakított
 kódot kell-e formatálni és hogy az átnevezéseket végre kell-e hajtani.
 
 \pagebreak
@@ -1335,7 +1331,7 @@ Ehhez az algoritmusok forráskódjait előbb átalakítom a szabályok alapján,
 majd futtatom a \emph{QuixBugs} teszteseteit az átalakított kódokon.
 
 Az ekvivalens szabályok helyességét úgy ellenőrzöm,
-hogy az összses ekvivalens szabályt alkalmazom a \emph{QuixBugs} kódjain.
+hogy az összes ekvivalens szabályt alkalmazom a \emph{QuixBugs} kódjain.
 Az összes ekvivalens szabály által végzett átalakítások nem ronthatnak el egy kódot sem,
 vagyis az átalakított kódokon futtatott összes teszt eredménye sikeres kell legyen.
 Azt is tesztelem, hogy a nem ekvivalens szabályok képesek-e elrontani egy kódot,
@@ -1389,7 +1385,7 @@ vagyis ha az ekvivalens szabályok nem rontanak el egy kódot sem.
 		276 / 276 = 100\% & 26 / 276 $\approx$ 9\% \\
 		\hline
 	\end{tabular}
-	\caption{\emph{QuixBugs} benchmarkot használó tesztek eredményei}
+	\caption{A \emph{QuixBugs} benchmarkot használó tesztek eredményei}
 	\label{tab:quix_tests}
 \end{table}
 

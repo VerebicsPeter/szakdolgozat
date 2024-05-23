@@ -33,7 +33,7 @@ Ha szükséges a konfigfájl alapértékeit átírhatjuk.
 \section{Adathalmazt generáló CLI}
 
 A szoftver CLI alkalmazásával van lehetőségünk az adathalmaz generálására egy
-adott csv fájlban található kódokból vagy egy könyvtárban taláható forrásfájlokból.
+adott csv fájlban található kódokból vagy egy könyvtárban található forrásfájlokból.
 Adathalmazt a következő paranccsal generálhatunk:
 
 \begin{lstlisting}[language=bash, numbers=none]
@@ -70,7 +70,7 @@ egy csv fájlba exportálhatjuk.
 
 \section{Átalakításokat szemléltető GUI}
 
-A szoftver GUI alkamazása szemlélteti az átalakításokat.
+A szoftver GUI alkalmazása szemlélteti az átalakításokat.
 Kipróbálhatunk vele egy vagy több átalakító szabályt,
 vizualizálhatjuk kódok absztrakt szintaxisfáját,
 és az adatbázisba bekerült átalakítások eredményét is megnézhetjük.
@@ -83,12 +83,12 @@ Az alkalmazás a forrás könyvtárából indítható a következő paranccsal:
 	$ python -m source
 \end{lstlisting}
 
-A parancs kiadása után a felugró ablakban beállíhatjuk az adatbázis kapcsolathoz szükséges paramétereket:
+A parancs kiadása után a felugró ablakban beállíthatjuk az adatbázis kapcsolathoz szükséges paramétereket:
 a \emph{host}, \emph{port} illetve \emph{database} értékeit (lásd \ref{fig:launcher}. ábra).
-A \emph{Connect} gombra kattintva az alkalmazás adatbáziseléréssel indul,
+A \emph{Connect} gombra kattintva az alkalmazás adatbázis-eléréssel indul,
 ha a megadott adatbázishoz 10 másodperc alatt kapcsolódni tud,
-különben adatbáziselérés nélkül fog elindulni.
-Adatbáziselérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmazást.
+különben adatbázis-elérés nélkül fog elindulni.
+Adatbázis-elérés nélkül a \emph{Launch Now} gombbal indíthatjuk az alkalmazást.
 
 \begin{figure}[H]
 	\centering
@@ -241,11 +241,8 @@ A táblázat soraiban található adatok sémáját a \ref{tab:schema}. tábláz
 	\label{tab:schema}
 \end{table}
 
-Ha a táblázat egy sorára, vagyis egy forráskód-párra
-%tippre nem kell kötőjel (akkor kell tudtommal, ha legalább 6 szótag és 3 szó az összetett szó. De nem tudom azóta ez a szabály hogy van...) szóval DIKK (idk (hehe))
-klikkelünk,
-akkor a diff nézetben megjelennek az eredeti (bal oldali) és az átakított (jobb oldali)
-kód közti különbségek.
+Ha a táblázat egy sorára, vagyis egy forráskód-párra klikkelünk, akkor a diff nézetben megjelennek
+az eredeti (bal oldali) és az átalakított (jobb oldali) kód közti különbségek.
 
 A forráskód-párok böngészéséhez a táblázat feletti keresőt használathatjuk.
 A kereső az összes sorban és oszlopban szereplő adatok közt keres.
