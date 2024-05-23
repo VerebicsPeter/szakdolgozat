@@ -1,8 +1,6 @@
 \chapter{Bevezetés}
 \label{ch:intro}
 
-% TODO: CIKKEK
-
 Szakdolgozatom témája Python forráskódok átalakítása, és ezen átalakítások szemléltetése.
 A motiváció az átalakítások mögött egy olyan adathalmaz generálása amiben
 ekvivalenciával felcímkézett forráskód-párok szerepelnek.
@@ -10,32 +8,31 @@ Egy ilyen adathalmazt felhasználhatunk egy mélytanuló
 neuronháló tanítására, ami forráskód-párok ekvivalenciáját dönti el.
 
 Az ekvivalencia eldöntése fontos feladat, mivel egyre több, kódokat gépi tanulással refaktoráló eszköz létezik.
-Ezek az eszközök egy kód refaktorálására adott promt hatására sokszor a kód jelentését is megváltoztatják,
-ami nem felel meg a refaktorálás definíciójának
-(egy átalakítás akkor refaktorálás, ha szemantikusan ekvivalens az átalakított kóddal).
+Ezek az eszközök egy kódot változtatva sokszor a kód jelentését is megváltoztatják, ami nem felel meg
+a refaktorálás definíciójának (az ekvivalencia szükséges feltétele a refaktorálásnak).
 
 A forráskód hasonlóság témája egy sokat kutatott terület.
-Ezen belül a forráskódok közti ekvivalencia vagy funkcionális hasonlóságok felismerésére
-gyakran használnak mélytanuláson alapuló módszereket
-\cite{CCLearner,DeepSim,ContextualEmbeddings,ContrastiveCodeRepair}.
+Forráskód hasonlósággal kapcsolatos problémák megoldására gyakran használnak mélytanuláson alpuló módszereket.
+Pédául a \emph{code-clone detection} \cite{CCLearner} és a funkcionálisan hasonló kódok felismerése \cite{DeepSim}, \cite{ContrastiveCodeRepr}
+megoldható mélytanuló neuronhálóval.
 
-Egy ekivalenciát eldöntő neuronháló képes lenne kiszűrni a szemantikusan nem ekvivalens átalakításokat,
+Egy ekivalenciát eldöntő neuronháló képes lenne jelezni a szemantikusan nem ekvivalens átalakításokat,
 ezzel javítva a gépi tanulást használó refaktoráló eszközök hatékonyságán.
 Tehát ekvivalens és nem ekvivalens kódokat generálva felépíthetünk egy adathalmazt, ami
 ekvivalenciával felcímkézett kódpárokat tartalmaz, és alkalmas egy fent leírt neuronháló
 tanítására.
 
 Az általam implementált átalakítások absztrakt szintaxisfák (AST-k) módosításával működnek.
+
 Egy forráskód fordítása közben a szintaktikus elemző előállítja a kód AST-jét,
 ami a kódot egy fa adatstruktúrával reprezentálja.
-
 Az AST-nek a szemantikus elemzésben van szerepe,
 de használhatjuk kódok átalakítására is, mivel visszaalakítható forráskóddá.
 
 Az általam megvalósított átalakítások a Python \emph{ast} modult \cite{pythonAST} használják,
 amely része a Python standard könyvtárának.
 
-Az átalakításokat elvégzéséhez szabályokat definiáltam.
+Az átalakítások elvégzéséhez szabályokat definiáltam.
 Átalakításkor a Python kódból létrehozott AST-n végrehajtunk egy szabályt alkalmazó függvényt.
 Ez a függvény a szabály segítségével megváltoztatja az AST-t, amit ha visszaalakítunk forráskóddá,
 egy megváltozott Python kódot kapunk.
@@ -55,10 +52,3 @@ amelyek tökéletesek az általam implementált szabályok kiegészítésére.
 
 A szakdolgozatom következő fejezeteiben az adathalmaz generálására és az átalakítások
 szemléltetésére alkalmas szoftver használatát és működését részletezem.
-
-% TODO
-% Szerintem jó lenne pár cikkre hivatkozni, és így a bibliográfia is nőne.
-% Ilyen stílusban, hogy:
-% "A hasonló vagy ekvivalens működésű forráskódok fellelése, vagy
-%  az ekvivalencia megállapítása egy sokat kutatott terület \cite{...}.
-%  XY et al. például ... stb."
