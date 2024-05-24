@@ -139,7 +139,7 @@ Ha nem írtuk felül, akkor a \emph{NodeVisitor} osztály
 Ezért folytat a \emph{NodeVisitor} alapból mélységi bejárást.
 
 A \emph{generic\_visit}-et is felülírhatjuk.
-Erre a \ref{src:TypeVisitor}. forrráskódban láthatunk példát.
+Erre a \ref{src:TypeVisitor}. forráskódban láthatunk példát.
 
 \lstset{caption={A \emph{TypeVisitor} osztály kódja}, label=src:TypeVisitor}
 \begin{lstlisting}[language={Python}]
@@ -259,7 +259,7 @@ az osztály UML diagramját a \ref{fig:SimpleRule}. ábrán láthatjuk.
 	\label{fig:SimpleRule}
 \end{figure}
 
-Az \emph{In-place} az AST egy node-ját alakítják át,
+Az \emph{In-place} szabályok az AST egy node-ját alakítják át,
 ha azon a node-on sikeresen mintaillesztettek, vagyis a node-ot helyben változtatják.
 
 Ezek az általam implementált legegyszerűbb szabályok,
@@ -292,7 +292,7 @@ A \emph{change} metódus először mintailleszt a \emph{try\_match} meghívásá
 A \emph{try\_match} visszatérési értéke alapján vagy átalakítja a node-ot,
 vagy egy \emph{None} visszaadásával jelzi, hogy az adott node-ot nem tudja átalakítani.
 
-Minden \emph{SimpleRule} osztályból származó szabály rendelkezik egy valószínűséggel változóval
+Minden \emph{SimpleRule} osztályból származó szabály rendelkezik egy valószínűségi változóval
 (\emph{probability} a \ref{fig:SimpleRule}. ábrán).
 Erre azért van szükség, mert a nagyon egyszerű szabályokat nem biztos,
 hogy minden node-ra alkalmazni szeretnénk.
@@ -363,7 +363,7 @@ táblázatokban láthatjuk.
 		\\ \hline
 
 		\emph{GuardDef}
-		& Függvény else ágbeli return utasítását early return utasítássá alakító szabály
+		& \textbf{else} ág \textbf{return} utasítást korai \textbf{return} utasítássá alakító szabály
 		& 1.0
 		\\ \hline
 
@@ -408,7 +408,7 @@ táblázatokban láthatjuk.
 		\\ \hline
 
 		\emph{InsertPass}
-		& \textbf{pass} utasítás beszúrása egy függvény definícióba
+		& \textbf{pass} utasítás beszúrása egy függvénydefinícióba
 		& 0.11
 		\\ \hline
 
@@ -515,7 +515,7 @@ amikre a $condition$ függvény teljesül
 Az egyik megoldás, ha létrehozunk egy üres listát,
 majd egy for ciklussal iterálunk az $xs$-en és
 a listához adjuk azokat az elemeket amelyekre a $condition$ függvény "truthy" értéket ad vissza.
-A "truthy" értékek olyan literálok vagy objektumok amiket boolean-é alakítva igazat kapunk.
+A "truthy" értékek olyan literálok vagy objektumok amiket boolean-né alakítva igazat kapunk.
 
 A másik megoldás, ha a listát egy list comprehensionnel adjuk meg,
 ekkor a for ciklus if feltételét a list comprehension végére tesszük.
@@ -660,7 +660,7 @@ A lista mindig a szabály \emph{change} metódusa által visszaadott
 Az első bejárás után a lehetséges változtatások már a \emph{results} listában vannak.
 Az AST-t újból bejárva a változtatásokat elvégezzük.
 A megjelölt \emph{Assign} node-okat töröljük
-és megjelölt \emph{For} node-okat a generált kifejezésre változtatjuk.
+és a megjelölt \emph{For} node-okat a generált kifejezésre változtatjuk.
 
 \begin{figure}[H]
 	\centering
@@ -670,7 +670,7 @@ A megjelölt \emph{Assign} node-okat töröljük
 
 A \emph{TFor} osztály \emph{transform\_ast} metódusa kétszer hívja
 meg a \emph{visit}-et a paraméterül kapott node-ra.
-A bejárást az osztály a\emph{generic\_visit} felülírásával végzi.
+A bejárást az osztály a \emph{generic\_visit} felülírásával végzi.
 
 A \emph{transformations} csomagban négyféle \emph{For} szabályt implementáltam.
 Az első három szabály az üres dict, list vagy set -et inicializáló for ciklusokat,
@@ -781,7 +781,7 @@ A \emph{model} csomag a feladata a forráskód-párok modellezése, három modul
 \end{itemize}
 
 A csomagban két adattípust definiáltam: a \emph{Code} és \emph{CodeChange} típusokat.
-A \emph{Code} a forráskódok modellje, a \emph{CodeChange} pedig a forrráskód-párokat modellezi.
+A \emph{Code} a forráskódok modellje, a \emph{CodeChange} pedig a forráskód-párokat modellezi.
 Az adatokat modellező osztályok UML diagramjait a \ref{fig:model}. ábrán láthatjuk.
 
 \begin{figure}[H]
@@ -833,7 +833,7 @@ Az alkalmazás csomagjainak UML diagramját a \ref{fig:app_packages}. ábrán l�
 \label{subsec:appstate}
 
 Az alkalmazásban kétféle modell különböztethető meg:
-az adatelérési modellek (lásd \ref{sec:model}. szekció),
+az adatelérési modellek (lásd \ref{sec:model}. alfejezet),
 és az alkalmazás állapotmodellje, ami az \emph{app.appstate} modul 
 \emph{AppState} osztályában van definiálva.
 
@@ -898,7 +898,7 @@ A \emph{tkinter} könyvtárban a GUI elemeket widgeteknek hívják.
 Az applikáció widgetei az \emph{app.widgets} modulban vannak definiálja.
 Például az \emph{app.widgets} modulban található
 a Python szintaxis kiemelését támogató szövegdoboz
-és az AST-ket ábrázoló fa-nézet definíciója is.
+és az AST-ket ábrázoló fa nézet definíciója is.
 
 Az applikáció összetettebb nézeteit az \emph{app.views} csomagban definiáltam.
 Ezek a nézetek szintén widgetek,
@@ -1332,7 +1332,7 @@ majd futtatom a \emph{QuixBugs} teszteseteit az átalakított kódokon.
 
 Az ekvivalens szabályok helyességét úgy ellenőrzöm,
 hogy az összes ekvivalens szabályt alkalmazom a \emph{QuixBugs} kódjain.
-Az összes ekvivalens szabály által végzett átalakítások nem ronthatnak el egy kódot sem,
+Az ekvivalens szabályok által végzett átalakítások nem ronthatnak el egy kódot sem,
 vagyis az átalakított kódokon futtatott összes teszt eredménye sikeres kell legyen.
 Azt is tesztelem, hogy a nem ekvivalens szabályok képesek-e elrontani egy kódot,
 vagyis úgy átalakítani azt, hogy a hozzá tartozó tesztek elbukjanak.
@@ -1347,7 +1347,7 @@ ez a függvény teszteli az általam implementált összes ekvivalens és nem ek
 Az alkalmazott szabályok ekvivalenciáját az \emph{equivalent} boolean paraméterrel lehet megadni.
 
 A \emph{test\_transformations} által végzett teszteknek két fázisa van.
-A függvény először a cache-eli az összes helyes megoldást tartalmazó forrráskódot,
+A függvény először a cache-eli az összes helyes megoldást tartalmazó forráskódot,
 ezután átalakítja a forráskódokat és futtatja a \emph{QuixBugs} tesztjeit.
 Ha a tesztek lefutottak a cache-elt kódok felülírják az átalakított kódokat,
 így újraindíthatjuk a tesztet.
